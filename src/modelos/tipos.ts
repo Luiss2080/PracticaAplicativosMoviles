@@ -1,0 +1,28 @@
+export interface Usuario {
+  nombre: string;
+  email: string;
+  avatar: string;
+}
+
+export interface Estadistica {
+  id: string;
+  titulo: string;
+  valor: string;
+  icono: string;
+  color: string;
+}
+
+export interface Accion {
+  id: string;
+  titulo: string;
+  icono: string;
+  colorFondo: string;
+  colorIcono: string;
+}
+
+export interface Actividad {
+  id: string;
+  descripcion: string;
+  tiempo: string;
+  icono: string;
+}
