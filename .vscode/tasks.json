@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Emulator (Pixel 7 Pro)",
+      "type": "shell",
+      "command": "& 'C:\\Users\\LuissxD\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe' -avd Pixel_7_Pro",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
+    },
+    {
+      "label": "Expo: Run Android",
+      "type": "shell",
+      "command": "npx expo start --android",
+      "isBackground": true,
+      "problemMatcher": ["$expo-metro"],
+      "presentation": {
+        "group": "expo"
+      }
+    },
+    {
+      "label": "🚀 Dev: Start Android Full",
+      "dependsOn": ["Start Emulator (Pixel 7 Pro)", "Expo: Run Android"],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
