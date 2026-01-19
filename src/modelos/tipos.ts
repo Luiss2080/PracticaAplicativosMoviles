@@ -26,3 +26,11 @@ export interface Actividad {
   tiempo: string;
   icono: string;
 }
+
+export interface Recurso {
+  id: string;
+  titulo: string;
+  descripcion: string;
+  categoria: string;
+  imagen: string; // URL o nombre de asset local
+}
