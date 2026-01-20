@@ -21,7 +21,10 @@ export default function DashboardVista() {
             Bienvenido a tu Dashboard
           </Text>
         </View>
-        <TouchableOpacity style={DashboardEstilos.botonNotificacion}>
+        <TouchableOpacity
+          style={DashboardEstilos.botonNotificacion}
+          onPress={() => router.push("/notificaciones")}
+        >
           <FontAwesome5 name="bell" size={20} color="#C21833" />
         </TouchableOpacity>
       </LinearGradient>

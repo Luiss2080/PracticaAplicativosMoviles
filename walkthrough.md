@@ -1,6 +1,6 @@
 # Walkthrough Final: App Delivery Premium
 
-Se ha completado la transformación de la aplicación a una versión funcional y estéticamente premium.
+Se ha completado la transformación de la aplicación a una versión funcional y estéticamente premium, ahora con **navegación completa**.
 
 ## 1. Funcionalidad "Real"
 
@@ -17,7 +17,23 @@ Ya no es solo visual. Se implementó `src/context/ContextoCarrito.tsx` usando Re
 - **Validación**: `LoginVista.tsx` ahora maneja estado local (`useState`) para usuario y PIN.
 - **Base de Datos**: Se conecta a SQLite (`initDB`, `seedDB`) al iniciar para asegurar que las tablas existan.
 
-## 2. Estética Premium
+## 2. Mapa de Navegación (Completo)
+
+### Perfil y Configuración
+
+El **Perfil** (`src/vistas/PerfilVista.tsx`) ahora es el centro de control del usuario:
+
+- 📍 **Direcciones**: (`/perfil/direcciones`) Lista mock de direcciones.
+- 💳 **Métodos de Pago**: (`/perfil/pagos`) Tarjetas guardadas.
+- ❤️ **Favoritos**: (`/favoritos`) Acceso rápido a restaurantes top.
+- ❓ **Ayuda**: (`/perfil/ayuda`) FAQ y contacto.
+
+### Dashboard e Interacción
+
+- 🔔 **Notificaciones**: (`/notificaciones`) Historial de alertas, accesible desde la campana en el Home.
+- 🍔 **Categorías**: Navegación por grid de categorías.
+
+## 3. Estética Premium
 
 ### Degradados (Linear Gradient)
 
@@ -40,8 +56,10 @@ Se estandarizó el diseño en TODAS las vistas (incluyendo Pedidos y Perfil):
 - `src/context/ContextoCarrito.tsx` (Nuevo)
 - `app/_layout.tsx` (Provider Wrapper)
 - `src/vistas/LoginVista.tsx` (Lógica + UI)
-- `src/vistas/DashboardVista.tsx` (Header Gradient)
-- `src/estilos/PedidosEstilos.ts` (Rediseño)
-- `src/estilos/PerfilEstilos.ts` (Rediseño)
+- `src/vistas/DashboardVista.tsx` (Header Gradient + Nav)
+- `src/vistas/PerfilVista.tsx` (Menú de Navegación)
+- `src/vistas/DireccionesVista.tsx` (Nueva Vista)
+- `src/vistas/MetodosPagoVista.tsx` (Nueva Vista)
+- `src/vistas/AyudaVista.tsx` (Nueva Vista)
 
-La aplicación está lista para ser presentada como un prototipo funcional de alta fidelidad.
+La aplicación está lista para ser presentada como un prototipo funcional de alta fidelidad, cubriendo todos los flujos principales de un usuario.
