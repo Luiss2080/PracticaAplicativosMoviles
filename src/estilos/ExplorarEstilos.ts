@@ -37,12 +37,12 @@ export const ExplorarEstilos = StyleSheet.create({
     marginBottom: 10,
   },
   insignia: {
-    backgroundColor: "#eff6ff",
+    backgroundColor: "#ffe4e6",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 6,
   },
-  textoInsignia: { color: "#3b82f6", fontSize: 12, fontWeight: "600" },
+  textoInsignia: { color: "#C21833", fontSize: 12, fontWeight: "600" },
   tituloTarjeta: {
     fontSize: 18,
     fontWeight: "bold",

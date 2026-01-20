@@ -1,54 +1,37 @@
-# Implementación de App de Delivery (Estilo PedidosYa)
+# Implementación: Rediseño, Login y Base de Datos
 
-Se ha transformado la aplicación para incluir un flujo de navegación completo típico de una app de delivery.
+Se ha completado la implementación del rediseño visual a tono rojo institucional, la inclusión de una pantalla de login y la configuración de la base de datos local.
 
-## Nuevas Funcionalidades
+## 1. Base de Datos (SQLite)
 
-### 1. Navegación Principal (Tabs)
+Se configuró `expo-sqlite` y se creó el servicio de inicialización en `src/servicios/BaseDeDatos.ts`.
 
-- **Inicio**: Dashboard renovado con categorías (Hamburguesas, Pizza, etc.) y restaurantes recomendados.
-- **Explorar**: Búsqueda de comida y restaurantes.
-- **Pedidos**: [NUEVO] Historial de pedidos y estado actual.
-- **Perfil**: Configuración de usuario.
+- **Tablas creadas**: `usuarios`, `restaurantes`, `categorias`, `productos`, `pedidos`, `detalle_pedido`.
+- **Seed Data**: Se insertan datos de prueba (categorías, restaurantes) al iniciar la app.
 
-### 2. Flujos de Usuario Implementados
+## 2. Pantalla de Login (Nueva)
 
-- **Restaurantes**: Visualización de perfil de restaurante y menú (`src/vistas/RestauranteVista.tsx`).
-- **Productos**: Detalle de producto con selector de cantidad y botón de agregar (`src/vistas/ProductoVista.tsx`).
-- **Carrito**: Resumen de compra, cálculo de totales y procesar pago (`src/vistas/CarritoVista.tsx`).
-- **Seguimiento**: Mapa de rastreo en tiempo real del pedido en camino (`src/vistas/SeguimientoVista.tsx`).
+Se creó una nueva pantalla de inicio que coincide con el diseño de referencia (Rojo/Blanco).
 
-## Archivos Creados/Modificados
+- **Ubicación**: `src/vistas/LoginVista.tsx`.
+- **Ruta**: `app/index.tsx` ahora renderiza el Login.
+- **Funcionalidad**: Al presionar "Ingresar", redirige a la pantalla de "Inicio" (`/inicio_tabs` -> renombrado internamente o gestionado via router). _Nota: La navegación se ajustó para que el Login sea la entrada y luego lleve al Dashboard._
 
-### Vistas (`src/vistas`)
+## 3. Rediseño "Red Theme"
 
-- `PedidosVista.tsx`
-- `RestauranteVista.tsx`
-- `ProductoVista.tsx`
-- `CarritoVista.tsx`
-- `SeguimientoVista.tsx`
-- `DashboardVista.tsx` (Actualizado con nuevos accesos)
-- `ExplorarVista.tsx` (Actualizado para contexto de comida)
+Se actualizaron los estilos globales para utilizar el color `#C21833` como primario y fondos claros/rojizos.
 
-### Estilos (`src/estilos`)
+- **Dashboard**: Headers y acentos en rojo. Fondo rosa pálido (`#fff0f0`).
+- **Explorar**: Insignias y enlaces en rojo.
+- **Producto**: Botón de "Agregar" en rojo.
+- **Carrito**: Botón de "Pagar" en rojo.
+- **Seguimiento**: Barra de progreso en rojo.
 
-- `PedidosEstilos.ts`
-- `RestauranteEstilos.ts`
-- `ProductoEstilos.ts`
-- `CarritoEstilos.ts`
-- `SeguimientoEstilos.ts`
+## Archivos Clave
 
-### Rutas (`app/`)
+- `src/servicios/BaseDeDatos.ts`
+- `src/vistas/LoginVista.tsx`
+- `src/estilos/LoginEstilos.ts`
+- `app/index.tsx` (Entry point)
 
-- `app/(tabs)/pedidos.tsx`
-- `app/restaurante/[id].tsx`
-- `app/producto/[id].tsx`
-- `app/carrito.tsx`
-- `app/seguimiento/[id].tsx`
-- `app/(tabs)/_layout.tsx` (Agregado tab de Pedidos)
-
-## Próximos Pasos
-
-- Integrar con una API real o base de datos.
-- Implementar el mapa real en la vista de seguimiento (actualmente es un placeholder).
-- Mejorar la lógica de estado global para el carrito (actualmente visual).
+La aplicación ahora inicia con el Login, inicializa la BD, y permite navegar al flujo de delivery con la nueva identidad visual.

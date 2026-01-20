@@ -33,7 +33,7 @@ export const CarritoEstilos = StyleSheet.create({
   textoResumen: { fontSize: 16, color: "#6b7280" },
   textoTotal: { fontSize: 18, fontWeight: "bold", color: "#1f2937" },
   botonPagar: {
-    backgroundColor: "#ea580c",
+    backgroundColor: "#C21833",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",

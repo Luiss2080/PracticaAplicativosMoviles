@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const DashboardEstilos = StyleSheet.create({
-  contenedor: { flex: 1, backgroundColor: "#fff" },
+  contenedor: { flex: 1, backgroundColor: "#fff0f0" },
   encabezado: {
     paddingTop: 60,
     paddingHorizontal: 20,
@@ -10,11 +10,11 @@ export const DashboardEstilos = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  saludo: { fontSize: 24, fontWeight: "bold", color: "#1f2937" },
+  saludo: { fontSize: 24, fontWeight: "bold", color: "#C21833" },
   subtitulo: { fontSize: 16, color: "#6b7280" },
   botonNotificacion: {
     padding: 10,
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#ffe4e6",
     borderRadius: 50,
   },
   contenedorEstadisticas: {

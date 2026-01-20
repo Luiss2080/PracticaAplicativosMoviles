@@ -26,7 +26,7 @@ export const SeguimientoEstilos = StyleSheet.create({
     marginBottom: 20,
     overflow: "hidden",
   },
-  progresoRelleno: { height: "100%", backgroundColor: "#ea580c" },
+  progresoRelleno: { height: "100%", backgroundColor: "#C21833" },
   estadoTitulo: {
     fontSize: 20,
     fontWeight: "bold",

@@ -37,7 +37,7 @@ export const ProductoEstilos = StyleSheet.create({
   botonCantidad: { padding: 10 },
   textoCantidad: { fontSize: 16, fontWeight: "bold", paddingHorizontal: 15 },
   botonAgregar: {
-    backgroundColor: "#ea580c",
+    backgroundColor: "#C21833",
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 8,

@@ -94,7 +94,7 @@ export default function LoginVista() {
         {/* Botón Login (oculto en el diseño visual de referencia pero necesario para UX) */}
         <TouchableOpacity
           style={[LoginEstilos.botonIngresar, { marginTop: 20 }]}
-          onPress={() => router.replace("/(tabs)")}
+          onPress={() => router.replace("/inicio")}
         >
           <Text style={LoginEstilos.textoBoton}>INGRESAR</Text>
         </TouchableOpacity>
