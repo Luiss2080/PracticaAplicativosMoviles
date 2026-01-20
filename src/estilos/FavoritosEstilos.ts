@@ -1,0 +1,52 @@
+import { StyleSheet } from "react-native";
+
+export const FavoritosEstilos = StyleSheet.create({
+  contenedor: { flex: 1, backgroundColor: "#f9fafb" },
+  encabezado: {
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    marginBottom: 20,
+  },
+  tituloEncabezado: { fontSize: 24, fontWeight: "bold", color: "#fff" },
+  grid: {
+    padding: 15,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  card: {
+    width: "48%",
+    backgroundColor: "#fff",
+    borderRadius: 24,
+    marginBottom: 20,
+    shadowColor: "#C21833",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
+    overflow: "hidden",
+  },
+  imagen: { width: "100%", height: 120, resizeMode: "cover" },
+  info: { padding: 15 },
+  nombre: { fontSize: 15, fontWeight: "bold", color: "#333", marginBottom: 5 },
+  rating: { flexDirection: "row", alignItems: "center", marginBottom: 5 },
+  textoRating: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#333",
+    marginLeft: 5,
+  },
+  botonCorazon: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "#fff",
+    padding: 8,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    elevation: 2,
+  },
+});

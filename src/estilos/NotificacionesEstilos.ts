@@ -1,0 +1,45 @@
+import { StyleSheet } from "react-native";
+
+export const NotificacionesEstilos = StyleSheet.create({
+  contenedor: { flex: 1, backgroundColor: "#f9fafb" },
+  encabezado: {
+    paddingTop: 60,
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    marginBottom: 20,
+  },
+  tituloEncabezado: { fontSize: 24, fontWeight: "bold", color: "#fff" },
+  lista: { padding: 20 },
+  item: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 15,
+    flexDirection: "row",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  iconoContenedor: {
+    width: 50,
+    height: 50,
+    borderRadius: 15,
+    backgroundColor: "#f3f4f6",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 15,
+  },
+  contenido: { flex: 1 },
+  tituloNotificacion: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1f2937",
+    marginBottom: 5,
+  },
+  textoNotificacion: { fontSize: 14, color: "#6b7280", lineHeight: 20 },
+  tiempo: { fontSize: 12, color: "#9ca3af", marginTop: 8 },
+});

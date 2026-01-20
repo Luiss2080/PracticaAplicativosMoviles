@@ -1,41 +1,49 @@
-# Plan Final: Funcionalidad Real y Estética Premium
+# Plan de Expansión de Vistas y Navegación
 
-Vamos a convertir los "mocks" visuales en funcionalidad real y elevar el nivel estético con degradados.
+Para completar la experiencia de "App de Delivery", agregaremos secciones críticas de configuración y gestión usuario.
 
-## 1. Funcionalidad: Carrito Global (React Context)
+## 1. Nuevas Vistas (Views)
 
-Actualmente, el carrito es visual. Implementaremos un estado global.
+Crearemos 5 nuevas pantallas en `src/vistas` con sus respectivos estilos en `src/estilos`.
 
-- **Archivo**: `src/context/ContextoCarrito.tsx`.
-- **Funciones**: `agregarItem`, `removerItem`, `limpiarCarrito`, `total`.
-- **Integración**:
-  - `src/vistas/ProductoVista.tsx`: Usar `agregarItem`.
-  - `src/vistas/CarritoVista.tsx`: Listar items reales y calcular total real.
+### A. Gestión de Usuario
 
-## 2. Funcionalidad: Login Real con SQLite
+1.  **DireccionesVista (`/perfil/direcciones`)**: Lista de direcciones guardadas y botón para agregar nueva.
+2.  **MetodosPagoVista (`/perfil/pagos`)**: Lista de tarjetas/métodos y opción de agregar.
+3.  **AyudaVista (`/perfil/ayuda`)**: Centro de ayuda, preguntas frecuentes y contacto.
 
-- **Validación**: El Login verificará si existe el usuario en la tabla `usuarios`.
-- **Seed**: Si no hay usuarios, crear uno por defecto (User: `admin`, Pin: `1234`).
-- **Actualización**: Modificar `src/vistas/LoginVista.tsx`.
+### B. Interacción
 
-## 3. Estética Premium: Degradados (`expo-linear-gradient`)
+4.  **FavoritosVista (`/favoritos`)**: Lista de restaurantes/productos marcados como favoritos.
+5.  **NotificacionesVista (`/notificaciones`)**: Historial de alertas y estados de pedidos.
 
-Instalar `expo-linear-gradient` para dar profundidad al color rojo plano.
+## 2. Configuración de Rutas (`app/`)
 
-- **Login**: Fondo con degradado rojo suave.
-- **Dashboard**: Header con degradado.
-- **Botones**: Botones de acción principales con degradado horizontal.
+Estructuraremos las rutas para mantener el orden.
 
-## 4. Modernización Restante
+- `app/perfil/direcciones.tsx`
+- `app/perfil/pagos.tsx`
+- `app/perfil/ayuda.tsx`
+- `app/favoritos.tsx`
+- `app/notificaciones.tsx`
 
-Actualizar las vistas que faltaban por recibir el tratamiento "Modern UI" (Bordes 32px, Sombras Difusas):
+## 3. Integración de Navegación
 
-- `src/estilos/PedidosEstilos.ts`
-- `src/estilos/PerfilEstilos.ts`
+- **PerfilVista**: Actualizar la lista de opciones para incluir botones navegables a Direcciones, Pagos y Ayuda.
+- **DashboardVista**: El icono de campana (Bell) navegará a `NotificacionesVista`.
+- **Barra Inferior (Tabs)**: Evaluar si agregar `Favoritos` como tab o botón flotante. Por ahora, acceso desde Perfil o Dashboard.
+
+## 4. Estilo Visual
+
+Todas las nuevas vistas seguirán rigurosamente el **"Modern UI"**:
+
+- Fondos claros (`#f9fafb`).
+- Tarjetas blancas con `borderRadius: 24` y sombra roja difusa.
+- Headers con `LinearGradient` rojo.
 
 ## Pasos de Ejecución
 
-1.  **Instalar**: `npx expo install expo-linear-gradient`.
-2.  **Contexto**: Crear `ContextoCarrito`.
-3.  **Estilos**: Actualizar `Perfil` y `Pedidos` y aplicar degradados en `Dashboard`/`Login`.
-4.  **Lógica**: Conectar Login a DB y Carrito a Contexto.
+1.  **Crear Rutas**: Generar los archivos en `app/`.
+2.  **Crear Estilos**: Generar archivos `.ts` en `src/estilos`.
+3.  **Implementar Vistas**: Codificar la lógica visual y navegación en `src/vistas`.
+4.  **Conectar**: Modificar `PerfilVista` y `DashboardVista` para habilitar los enlaces.
