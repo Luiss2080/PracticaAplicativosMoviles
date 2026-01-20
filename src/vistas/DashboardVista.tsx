@@ -1,10 +1,11 @@
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useDashboardControlador } from "../controladores/useDashboardControlador";
 import { DashboardEstilos } from "../estilos/DashboardEstilos";
 
 export default function DashboardVista() {
+  const router = useRouter();
   const { estadisticas, acciones, actividades, saludo } =
     useDashboardControlador();
 

@@ -29,7 +29,7 @@ export default function ExplorarVista() {
           />
           <TextInput
             style={ExplorarEstilos.entradaBusqueda}
-            placeholder="Buscar cursos, artículos..."
+            placeholder="Buscar comida, restaurantes..."
             placeholderTextColor="#9ca3af"
             value={busqueda}
             onChangeText={setBusqueda}
@@ -44,7 +44,7 @@ export default function ExplorarVista() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={ExplorarEstilos.tarjeta}
-            onPress={() => router.push(`/detalle/${item.id}`)}
+            onPress={() => router.push(`/producto/${item.id}`)}
           >
             <View style={ExplorarEstilos.encabezadoTarjeta}>
               <View style={ExplorarEstilos.insignia}>
