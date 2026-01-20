@@ -1,3 +1,4 @@
+import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { CarritoEstilos } from "../estilos/CarritoEstilos";
@@ -44,7 +45,13 @@ export default function CarritoVista() {
 
           <TouchableOpacity
             style={CarritoEstilos.botonPagar}
-            onPress={() => router.push("/seguimiento/nuevo")}
+            activeOpacity={0.8}
+            onPress={() => {
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
+              router.push("/seguimiento/nuevo");
+            }}
           >
             <Text style={CarritoEstilos.textoBoton}>Confirmar Pedido</Text>
           </TouchableOpacity>

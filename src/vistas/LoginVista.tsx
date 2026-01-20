@@ -1,4 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -94,7 +95,11 @@ export default function LoginVista() {
         {/* Botón Login (oculto en el diseño visual de referencia pero necesario para UX) */}
         <TouchableOpacity
           style={[LoginEstilos.botonIngresar, { marginTop: 20 }]}
-          onPress={() => router.replace("/inicio")}
+          activeOpacity={0.8}
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            router.replace("/inicio");
+          }}
         >
           <Text style={LoginEstilos.textoBoton}>INGRESAR</Text>
         </TouchableOpacity>

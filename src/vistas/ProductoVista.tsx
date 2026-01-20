@@ -1,4 +1,5 @@
 import { FontAwesome5 } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -31,14 +32,20 @@ export default function ProductoVista() {
       <View style={ProductoEstilos.footer}>
         <View style={ProductoEstilos.controlCantidad}>
           <TouchableOpacity
-            onPress={() => setCantidad(Math.max(1, cantidad - 1))}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setCantidad(Math.max(1, cantidad - 1));
+            }}
             style={ProductoEstilos.botonCantidad}
           >
             <FontAwesome5 name="minus" size={16} color="#333" />
           </TouchableOpacity>
           <Text style={ProductoEstilos.textoCantidad}>{cantidad}</Text>
           <TouchableOpacity
-            onPress={() => setCantidad(cantidad + 1)}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setCantidad(cantidad + 1);
+            }}
             style={ProductoEstilos.botonCantidad}
           >
             <FontAwesome5 name="plus" size={16} color="#333" />
@@ -47,7 +54,11 @@ export default function ProductoVista() {
 
         <TouchableOpacity
           style={ProductoEstilos.botonAgregar}
-          onPress={() => router.push("/carrito")}
+          activeOpacity={0.8}
+          onPress={() => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            router.push("/carrito");
+          }}
         >
           <Text style={ProductoEstilos.textoBoton}>
             Agregar ${(cantidad * 8.5).toFixed(2)}

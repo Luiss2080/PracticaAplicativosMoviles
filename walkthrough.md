@@ -1,37 +1,42 @@
-# Implementación: Rediseño, Login y Base de Datos
+# Implementación: Rediseño Moderno y UX
 
-Se ha completado la implementación del rediseño visual a tono rojo institucional, la inclusión de una pantalla de login y la configuración de la base de datos local.
+Se ha completado la modernización visual y la mejora de la experiencia de usuario (UX) mediante estilos refinados y feedback háptico.
 
-## 1. Base de Datos (SQLite)
+## 1. Estilo Moderno (UI)
 
-Se configuró `expo-sqlite` y se creó el servicio de inicialización en `src/servicios/BaseDeDatos.ts`.
+Se aplicó un lenguaje de diseño más "suave" y limpio.
 
-- **Tablas creadas**: `usuarios`, `restaurantes`, `categorias`, `productos`, `pedidos`, `detalle_pedido`.
-- **Seed Data**: Se insertan datos de prueba (categorías, restaurantes) al iniciar la app.
+- **Sombras**: Se reemplazaron las sombras duras por difusas (`shadowOpacity: 0.1`, `shadowRadius: 20`) y colores de sombra tintados (rojos en lugar de negro puro).
+- **Bordes**: Se aumentó el radio de borde (`borderRadius`) a **32px** en tarjetas principales y **20px** en botones para una apariencia más amigable y moderna.
+- **Espaciado**: Se mejoró el padding interno de las tarjetas y contenedores.
 
-## 2. Pantalla de Login (Nueva)
+## 2. Experiencia de Usuario (UX)
 
-Se creó una nueva pantalla de inicio que coincide con el diseño de referencia (Rojo/Blanco).
+Se integró **Haptics** (vibración del dispositivo) para confirmar acciones clave.
 
-- **Ubicación**: `src/vistas/LoginVista.tsx`.
-- **Ruta**: `app/index.tsx` ahora renderiza el Login.
-- **Funcionalidad**: Al presionar "Ingresar", redirige a la pantalla de "Inicio" (`/inicio_tabs` -> renombrado internamente o gestionado via router). _Nota: La navegación se ajustó para que el Login sea la entrada y luego lleve al Dashboard._
+- **Login**: Vibración media al ingresar.
+- **Producto**:
+  - Vibración ligera al aumentar/disminuir cantidad.
+  - Vibración de "Éxito" (Success notification) al agregar al carrito.
+- **Carrito**: Vibración de "Éxito" al confirmar el pedido.
+- **Interacción**: Se añadió `activeOpacity={0.8}` en botones para dar feedback visual inmediato al toque.
 
-## 3. Rediseño "Red Theme"
+## 3. Base de Datos (SQLite)
 
-Se actualizaron los estilos globales para utilizar el color `#C21833` como primario y fondos claros/rojizos.
+Se mantiene la configuración de `expo-sqlite` creada anteriormente.
 
-- **Dashboard**: Headers y acentos en rojo. Fondo rosa pálido (`#fff0f0`).
-- **Explorar**: Insignias y enlaces en rojo.
-- **Producto**: Botón de "Agregar" en rojo.
-- **Carrito**: Botón de "Pagar" en rojo.
-- **Seguimiento**: Barra de progreso en rojo.
+- **Tablas**: `usuarios`, `restaurantes`, `categorias`, `productos`, `pedidos`, `detalle_pedido`.
 
-## Archivos Clave
+## 4. Pantalla de Login (Nueva)
 
-- `src/servicios/BaseDeDatos.ts`
-- `src/vistas/LoginVista.tsx`
-- `src/estilos/LoginEstilos.ts`
-- `app/index.tsx` (Entry point)
+Mantiene el diseño rojo pero con la tarjeta blanca central modernizada (sombra roja difusa, bordes muy redondeados).
 
-La aplicación ahora inicia con el Login, inicializa la BD, y permite navegar al flujo de delivery con la nueva identidad visual.
+## Archivos Clave Actualizados
+
+- `src/estilos/LoginEstilos.ts` (Estilo Moderno)
+- `src/estilos/DashboardEstilos.ts` (Estilo Moderno)
+- `src/vistas/LoginVista.tsx` (Haptics)
+- `src/vistas/ProductoVista.tsx` (Haptics)
+- `src/vistas/CarritoVista.tsx` (Haptics)
+
+La aplicación ahora se siente más "nativa" y receptiva gracias a la respuesta táctil y visual.
