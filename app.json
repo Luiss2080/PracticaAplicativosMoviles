@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "PracticaAplicativosMoviles",
-    "slug": "PracticaAplicativosMoviles",
+    "name": "Speedy",
+    "slug": "speedy-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "practicaaplicativosmoviles",
+    "scheme": "speedy",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
