@@ -2,6 +2,7 @@ import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { useCarrito } from "../context/ContextoCarrito";
+import { useFavoritos } from "../context/ContextoFavoritos";
 import { Producto } from "../modelos/tipos";
 
 export const useProductoControlador = () => {
@@ -10,7 +11,9 @@ export const useProductoControlador = () => {
   const [cantidad, setCantidad] = useState(1);
   const [instrucciones, setInstrucciones] = useState("");
   const [extrasSeleccionados, setExtrasSeleccionados] = useState<string[]>([]);
-  const [esFavorito, setEsFavorito] = useState(false);
+
+  const { toggleFavorito: toggleFavContext, esFavorito: checkEsFavorito } =
+    useFavoritos();
   const { agregarItem } = useCarrito();
 
   // Mock product data - in a real app this would come from an API or database
@@ -33,6 +36,8 @@ export const useProductoControlador = () => {
     ],
   };
 
+  const esFavorito = checkEsFavorito(producto.id);
+
   const incrementarCantidad = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCantidad((prev) => prev + 1);
@@ -54,7 +59,7 @@ export const useProductoControlador = () => {
 
   const toggleFavorito = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    setEsFavorito((prev) => !prev);
+    toggleFavContext(producto);
   };
 
   const precioUnitarioConExtras = useMemo(() => {
