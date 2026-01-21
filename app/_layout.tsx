@@ -10,6 +10,8 @@ import { CarritoProvider } from "../src/context/ContextoCarrito";
 import { FavoritosProvider } from "../src/context/ContextoFavoritos";
 
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useEffect } from "react";
+import { initDB, seedDB } from "../src/servicios/BaseDeDatos";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -17,6 +19,12 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    initDB()
+      .then(() => seedDB())
+      .catch((e) => console.error("Error BD:", e));
+  }, []);
 
   return (
     <FavoritosProvider>

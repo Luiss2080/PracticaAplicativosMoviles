@@ -45,9 +45,9 @@ export default function LoginVista() {
         >
           <FontAwesome5 name="store" size={50} color="#fff" />
         </View>
-        <Text style={LoginEstilos.titulo}>Inicio de Sesión</Text>
+        <Text style={LoginEstilos.titulo}>Delivery App</Text>
         <Text style={LoginEstilos.subtitulo}>
-          Gestión de Inventario del negocio de sus sueños
+          La mejor comida, directa a tu puerta
         </Text>
       </View>
 
@@ -75,7 +75,7 @@ export default function LoginVista() {
         </View>
 
         {/* Input PIN */}
-        <Text style={LoginEstilos.labelPin}>Ingresa tu clave Yape</Text>
+        <Text style={LoginEstilos.labelPin}>Contraseña</Text>
         <View style={LoginEstilos.pinContainer}>
           {[1, 2, 3, 4].map((i) => (
             <TextInput
