@@ -12,6 +12,7 @@ export default function CarritoVista() {
     eliminarItem,
     vaciarCarrito,
     procederAlPago,
+    seguirComprando,
   } = useCarritoControlador();
 
   return (
@@ -34,9 +35,24 @@ export default function CarritoVista() {
         {items.length === 0 ? (
           <View style={{ alignItems: "center", marginTop: 50 }}>
             <FontAwesome5 name="shopping-basket" size={50} color="#cbd5e1" />
-            <Text style={{ marginTop: 20, color: "#64748b" }}>
+            <Text style={{ marginTop: 20, color: "#64748b", marginBottom: 20 }}>
               Tu canasta está vacía
             </Text>
+            <TouchableOpacity
+              onPress={seguirComprando}
+              style={{
+                backgroundColor: "#fff",
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                borderRadius: 20,
+                borderWidth: 1,
+                borderColor: "#C21833",
+              }}
+            >
+              <Text style={{ color: "#C21833", fontWeight: "bold" }}>
+                Seguir Comprando
+              </Text>
+            </TouchableOpacity>
           </View>
         ) : (
           items.map((item) => (

@@ -1,5 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
+import { Alert } from "react-native";
 import { useCarrito } from "../context/ContextoCarrito";
 
 export const useCarritoControlador = () => {
@@ -9,23 +10,41 @@ export const useCarritoControlador = () => {
   const procederAlPago = () => {
     if (items.length === 0) return;
 
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    // Assuming /seguimiento/nuevo is the correct flow to start tracking/order
-    // Or maybe it should go to a checkout page first.
-    // Given the previous code, it went to /seguimiento/nuevo.
-    // I will keep it but maybe it should be /metodos-pago or /direcciones first in a real app.
-    // For now, I'll match the previous logic but improve the route if needed.
-    router.push("/seguimiento/nuevo" as any);
+    Alert.alert("Confirmar Pedido", "¿Deseas procesar tu pedido ahora?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Confirmar",
+        onPress: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          router.push("/seguimiento/nuevo" as any);
+        },
+      },
+    ]);
   };
 
   const vaciarCarrito = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    limpiarCarrito();
+    Alert.alert(
+      "Vaciar Carrito",
+      "¿Estás seguro que deseas eliminar todos los productos?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Sí, vaciar",
+          style: "destructive",
+          onPress: () => limpiarCarrito(),
+        },
+      ],
+    );
   };
 
   const eliminarItem = (id: string) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     removerItem(id);
+  };
+
+  const seguirComprando = () => {
+    router.back();
   };
 
   const subtotal = total;
@@ -40,6 +59,7 @@ export const useCarritoControlador = () => {
     eliminarItem,
     vaciarCarrito,
     procederAlPago,
+    seguirComprando,
     router,
   };
 };

@@ -4,6 +4,8 @@ import { Stack, useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useCarrito } from "../context/ContextoCarrito";
+import { useDashboardControlador } from "../controladores/useDashboardControlador";
+import { DashboardEstilos } from "../estilos/DashboardEstilos";
 
 export default function DashboardVista() {
   const router = useRouter();
