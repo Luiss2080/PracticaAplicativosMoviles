@@ -3,7 +3,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Stack, useRouter } from "expo-router";
 import React from "react";
 import {
+  SafeAreaView,
   ScrollView,
+  StatusBar,
   Text,
   TextInput,
   TouchableOpacity,
@@ -12,9 +14,6 @@ import {
 import { useCarrito } from "../context/ContextoCarrito";
 import { useDashboardControlador } from "../controladores/useDashboardControlador";
 import { DashboardEstilos } from "../estilos/DashboardEstilos";
-
-import React from "react";
-import { SafeAreaView, StatusBar } from "react-native";
 
 export default function DashboardVista() {
   const router = useRouter();
@@ -48,7 +47,7 @@ export default function DashboardVista() {
                 style={DashboardEstilos.botonIcono}
                 onPress={() => router.push("/carrito" as any)}
               >
-                <FontAwesome5 name="shopping-cart" size={20} color="#C21833" />
+                <FontAwesome5 name="shopping-cart" size={18} color="#C21833" />
                 {cantidadItems > 0 && (
                   <View style={DashboardEstilos.badge}>
                     <Text style={DashboardEstilos.badgeTexto}>
@@ -61,7 +60,31 @@ export default function DashboardVista() {
                 style={DashboardEstilos.botonIcono}
                 onPress={() => router.push("/notificaciones" as any)}
               >
-                <FontAwesome5 name="bell" size={20} color="#C21833" />
+                <FontAwesome5 name="bell" size={18} color="#C21833" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  DashboardEstilos.botonIcono,
+                  { backgroundColor: "rgba(255,255,255,0.3)" },
+                ]} // Slightly different style for exit
+                onPress={() => {
+                  // Quick Alert for confirmation would be better but for now direct for simplicity or import Alert
+                  const { Alert } = require("react-native");
+                  Alert.alert(
+                    "Cerrar Sesión",
+                    "¿Estás seguro que deseas salir?",
+                    [
+                      { text: "Cancelar", style: "cancel" },
+                      {
+                        text: "Salir",
+                        style: "destructive",
+                        onPress: () => router.replace("/"),
+                      },
+                    ],
+                  );
+                }}
+              >
+                <FontAwesome5 name="sign-out-alt" size={18} color="#fff" />
               </TouchableOpacity>
             </View>
           </View>
