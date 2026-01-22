@@ -1,12 +1,12 @@
 import { Dimensions, StyleSheet } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export const DashboardEstilos = StyleSheet.create({
   contenedor: { flex: 1 },
   encabezado: {
-    paddingTop: 20, // Reduced top padding as SafeAreaView handles it
-    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingHorizontal: width * 0.05, // 5% padding
     paddingBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -28,14 +28,14 @@ export const DashboardEstilos = StyleSheet.create({
     position: "absolute",
     top: -2,
     right: -2,
-    backgroundColor: "#ef4444", // Bright red/orange for notification
+    backgroundColor: "#ef4444",
     width: 18,
     height: 18,
     borderRadius: 9,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#C21833", // Match background to simulate "cutout"
+    borderColor: "#C21833",
   },
   badgeTexto: { color: "#fff", fontSize: 10, fontWeight: "bold" },
 
@@ -46,7 +46,8 @@ export const DashboardEstilos = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 12,
     alignItems: "center",
-    marginHorizontal: 20, // Add side margins
+    width: width * 0.9, // 90% width
+    alignSelf: "center",
     marginBottom: 25,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -58,7 +59,7 @@ export const DashboardEstilos = StyleSheet.create({
 
   contenedorEstadisticas: {
     flexDirection: "row",
-    paddingHorizontal: 20,
+    paddingHorizontal: width * 0.05,
     gap: 15,
     marginBottom: 25,
   },
@@ -66,7 +67,7 @@ export const DashboardEstilos = StyleSheet.create({
     flex: 1,
     padding: 15,
     borderRadius: 20,
-    flexDirection: "row", // Horizontal layout for stats
+    flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
@@ -95,15 +96,15 @@ export const DashboardEstilos = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingTop: 30,
-    paddingBottom: 50,
-    minHeight: 500, // Ensure it fills screen
+    paddingBottom: 100, // Extra padding for bottom tabs
+    minHeight: height * 0.6, // Occupy at least 60% of screen height
   },
 
   tituloSeccion: {
     fontSize: 20,
     fontWeight: "800",
     color: "#1f2937",
-    marginLeft: 20,
+    marginLeft: width * 0.05,
     marginBottom: 20,
   },
 
@@ -112,11 +113,16 @@ export const DashboardEstilos = StyleSheet.create({
     flexWrap: "wrap",
     paddingHorizontal: 10,
     marginBottom: 30,
+    justifyContent: "space-between", // Distribute evenly
   },
-  elementoCuadricula: { width: "25%", alignItems: "center", marginBottom: 20 },
+  elementoCuadricula: {
+    width: (width - 20) / 4, // Exact 4 columns within padded area
+    alignItems: "center",
+    marginBottom: 20,
+  },
   contenedorIcono: {
-    width: 60,
-    height: 60,
+    width: width * 0.15, // Responsive size (~60px on typical screen)
+    height: width * 0.15,
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -139,11 +145,12 @@ export const DashboardEstilos = StyleSheet.create({
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
+    marginHorizontal: width * 0.05, // Responsive margins
   },
   avatarRestaurante: {
     width: 50,
     height: 50,
-    backgroundColor: "#fff0f0", // Light red bg
+    backgroundColor: "#fff0f0",
     borderRadius: 15,
     marginRight: 15,
     justifyContent: "center",
@@ -158,7 +165,7 @@ export const DashboardEstilos = StyleSheet.create({
   descRestaurante: { color: "#6b7280", fontSize: 14 },
 
   // Recent Activity
-  lista: { paddingHorizontal: 20 },
+  lista: { paddingHorizontal: width * 0.05 },
   elementoLista: {
     flexDirection: "row",
     alignItems: "center",
