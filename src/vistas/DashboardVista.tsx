@@ -141,8 +141,8 @@ export default function DashboardVista() {
               {[
                 {
                   id: "1",
-                  titulo: "Burgers",
-                  icono: "hamburger",
+                  titulo: "Pedidos",
+                  icono: "clipboard-list",
                   color: "#ffedd5",
                   colorIcono: "#c2410c",
                 },
@@ -284,6 +284,49 @@ export default function DashboardVista() {
                   <Text style={DashboardEstilos.tiempoLista}>{act.tiempo}</Text>
                 </View>
               ))}
+            </View>
+
+            {/* Footer Section */}
+            <View
+              style={{
+                marginTop: 30,
+                marginHorizontal: 20,
+                padding: 20,
+                backgroundColor: "#f8fafc",
+                borderRadius: 15,
+                alignItems: "center",
+              }}
+            >
+              <FontAwesome5
+                name="gift"
+                size={24}
+                color="#C21833"
+                style={{ marginBottom: 10 }}
+              />
+              <Text
+                style={{ fontWeight: "bold", fontSize: 16, color: "#334155" }}
+              >
+                ¡Ofertas Especiales!
+              </Text>
+              <Text
+                style={{ textAlign: "center", color: "#64748b", marginTop: 5 }}
+              >
+                Revisa las promociones de hoy y ahorra en tu pedido.
+              </Text>
+              <TouchableOpacity
+                style={{
+                  marginTop: 15,
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  backgroundColor: "#C21833",
+                  borderRadius: 20,
+                }}
+                onPress={() => router.push("/explorar" as any)}
+              >
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Ver Ofertas
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>

@@ -5,8 +5,8 @@ const { width, height } = Dimensions.get("window");
 export const DashboardEstilos = StyleSheet.create({
   contenedor: { flex: 1 },
   encabezado: {
-    paddingTop: 10,
-    paddingHorizontal: width * 0.05, // 5% padding
+    paddingTop: 60, // Increased to clearly clear the notch/camera
+    paddingHorizontal: width * 0.05,
     paddingBottom: 20,
     flexDirection: "row",
     justifyContent: "space-between",
