@@ -89,7 +89,8 @@ export const useProductoControlador = () => {
     );
 
     agregarItem({
-      id: producto.id + Date.now().toString(), // Improved unique ID
+      id: producto.id + Date.now().toString(), // Unique ID for cart list
+      producto_id: producto.id, // Real DB ID for checkout
       nombre: producto.nombre,
       precio: precioUnitarioConExtras,
       cantidad: cantidad,

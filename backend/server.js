@@ -141,8 +141,28 @@ app.post("/api/direcciones", async (req, res) => {
 
 // 5. Auth (Login Simple) - Optional if you want real auth later
 app.post("/api/login", async (req, res) => {
-  // For now simple pass-through or mock
-  res.json({ message: "Login logic to be implemented" });
+  try {
+    const { email, password } = req.body; // Changed to email field for standard login, or map 'usuario' to it if needed
+    // Assuming 'usuario' from frontend maps to 'nombre' or 'email' in DB. Let's use 'nombre' for simplicity as per current frontend usage.
+    const { usuario } = req.body;
+
+    // Search by name (since frontend sends 'usuario')
+    const [rows] = await pool.query(
+      "SELECT * FROM usuarios WHERE nombre = ? AND password = ?",
+      [usuario, password],
+    );
+
+    if (rows.length > 0) {
+      const user = rows[0];
+      res.json({ success: true, user: { id: user.id, nombre: user.nombre } });
+    } else {
+      res
+        .status(401)
+        .json({ success: false, message: "Credenciales inválidas" });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Start Server

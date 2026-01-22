@@ -11,26 +11,23 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { LoginEstilos } from "../estilos/LoginEstilos";
+import { loginUsuario } from "../servicios/BaseDeDatos";
 
-import { LinearGradient } from "expo-linear-gradient";
-// ... hooks
-
-export default function LoginVista() {
-  const router = useRouter();
-  const [usuario, setUsuario] = useState("");
-  const [pin, setPin] = useState("");
-
-  // ... useEffect setupDB
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    // Validación simple
-    if (usuario.length > 0) {
+    if (usuario.length === 0) {
+       alert("Por favor ingresa un usuario");
+       return;
+    }
+    
+    // Call API
+    const res = await loginUsuario(usuario, pin || "demo123"); // Default pass if empty for ease of testing
+    
+    if (res.success) {
       router.replace("/inicio");
     } else {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      alert("Por favor ingresa un usuario");
+      alert(res.message || "Error al iniciar sesión");
     }
   };
 

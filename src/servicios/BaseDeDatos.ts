@@ -136,4 +136,34 @@ export const crearDireccion = async (
     console.error("API Error (Crear Direccion):", error);
     throw error;
   }
+    throw error;
+  }
+};
+
+export const loginUsuario = async (usuario: string, pin: string) => {
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ usuario, password: pin }),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("API Error (Login):", error);
+    return { success: false, message: "Error de conexión" };
+  }
+};
+
+export const crearPedido = async (pedido: any) => {
+  try {
+    const response = await fetch(`${API_URL}/pedidos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(pedido),
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("API Error (Pedido):", error);
+    return { success: false, message: "Error de conexión" };
+  }
 };

@@ -7,19 +7,46 @@ export const useCarritoControlador = () => {
   const router = useRouter();
   const { items, total, removerItem, limpiarCarrito } = useCarrito();
 
+  import { crearPedido } from "../servicios/BaseDeDatos";
+
   const procederAlPago = () => {
     if (items.length === 0) return;
 
-    Alert.alert("Confirmar Pedido", "¿Deseas procesar tu pedido ahora?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Confirmar",
-        onPress: () => {
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          router.push("/seguimiento/nuevo" as any);
+    Alert.alert(
+      "Confirmar Pedido",
+      `Total: $${totalPagar.toFixed(2)}\n¿Deseas procesar tu pedido ahora?`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Confirmar",
+          onPress: async () => {
+            // Prepare payload
+            const payload = {
+              usuario_id: 1, // Hardcoded for now, or use context
+              total: totalPagar,
+              restaurante: items[0]?.restaurante || "Varios",
+              items: items.map((i) => ({
+                producto_id: (i as any).producto_id || 1,
+                cantidad: i.cantidad,
+                precio: i.precio,
+              })),
+            };
+
+            const res = await crearPedido(payload);
+
+            if (res.success) {
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
+              limpiarCarrito();
+              router.push("/seguimiento/nuevo" as any);
+            } else {
+              Alert.alert("Error", "No se pudo procesar el pedido.");
+            }
+          },
         },
-      },
-    ]);
+      ],
+    );
   };
 
   const vaciarCarrito = () => {
