@@ -109,6 +109,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
+  console.log(`Available on your network IP as well.`);
 });

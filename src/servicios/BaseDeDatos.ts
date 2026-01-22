@@ -2,22 +2,28 @@ import Constants from "expo-constants";
 import { Platform } from "react-native";
 
 const getApiUrl = () => {
-  // 1. Si estamos en Web o no hay hostUri (prod?), usar localhost
+  // --- CONFIGURACIÓN MANUAL (Si la autodeteción falla) ---
+  // Si tu celular no conecta, cambia "null" por tu IP local (ej: "192.168.1.15")
+  const MANUAL_IP = "172.25.1.150";
+
+  if (MANUAL_IP) return `http://${MANUAL_IP}:3000/api`;
+
+  // 1. Web
   if (Platform.OS === "web") return "http://localhost:3000/api";
 
-  // 2. Intentar obtener la IP del debugger (Metro Bundler)
+  // 2. Autodetección via Expo (Metro Bundler)
   const debuggerHost = Constants.expoConfig?.hostUri;
   const localhost = debuggerHost?.split(":")[0];
 
   if (localhost) {
-    // Devuelve la IP de tu PC (ej: 192.168.1.15)
+    // IMPORTANTE: Si esto devuelve una IP extraña (como 172.x.x.x) y no conecta,
+    // es porque Expo está tomando el adaptador incorrecto. Usa MANUAL_IP arriba.
     return `http://${localhost}:3000/api`;
   }
 
-  // 3. Fallback para emulador Android si falla lo anterior
+  // 3. Fallback Android Emulator
   if (Platform.OS === "android") return "http://10.0.2.2:3000/api";
 
-  // 4. Fallback final (iOS simulator o error)
   return "http://localhost:3000/api";
 };
 
