@@ -4,12 +4,12 @@
 
 ### Cliente
 
-- **Usuario:** `usuario` (o `luis`)
+- **Usuario:** `SpeedyCliente`
 - **Contraseña:** `demo123`
 
-### Repartidor (Nuevo)
+### Repartidor
 
-- **Usuario:** `Reportidor Demo` (o email `repartidor@speedy.com`)
+- **Usuario:** `SpeedyRepartidor`
 - **Contraseña:** `demo123`
 - **Rol:** `repartidor`
 
