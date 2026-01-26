@@ -4,14 +4,13 @@
 
 ### Cliente
 
-- **Usuario:** `SpeedyCliente`
-- **Contraseña:** `demo123`
+- **Email:** `cliente@gmail.com`
+- **Contraseña:** `1234`
 
 ### Repartidor
 
-- **Usuario:** `SpeedyRepartidor`
-- **Contraseña:** `demo123`
-- **Rol:** `repartidor`
+- **Email:** `moto@gmail.com`
+- **Contraseña:** `1234`
 
 ## Base de Datos
 
