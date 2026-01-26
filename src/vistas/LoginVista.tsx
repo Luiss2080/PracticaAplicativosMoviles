@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -49,9 +50,9 @@ export default function LoginVista() {
 
       // Navigate based on Role
       if (res.user.rol === "repartidor") {
-        router.replace("/repartidor/home");
+        router.replace("/(driver-tabs)/");
       } else {
-        router.replace("/(tabs)"); // Go to main client tabs
+        router.replace("/(client-tabs)/");
       }
     } else {
       if (Platform.OS !== "web") {
@@ -67,94 +68,100 @@ export default function LoginVista() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
-        <LinearGradient
-          colors={[APP_COLOR, "#C90425"]}
-          style={styles.headerBackground}
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
         >
-          <View style={styles.logoCircle}>
-            <FontAwesome5 name="utensils" size={40} color={APP_COLOR} />
-          </View>
-          <Text style={styles.appTitle}>Speedy Delivery</Text>
-          <Text style={styles.appSubtitle}>
-            Tu comida favorita, al instante
-          </Text>
-        </LinearGradient>
-
-        <View style={styles.formContainer}>
-          <Text style={styles.welcomeText}>¡Hola! 👋</Text>
-          <Text style={styles.welcomeSubText}>
-            Inicia sesión para continuar
-          </Text>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Usuario / Email</Text>
-            <View style={styles.inputWrapper}>
-              <FontAwesome5
-                name="user"
-                size={16}
-                color="#9CA3AF"
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="ej. JuanPerez"
-                placeholderTextColor="#9CA3AF"
-                value={usuario}
-                onChangeText={setUsuario}
-                autoCapitalize="none"
-              />
+          <LinearGradient
+            colors={[APP_COLOR, "#C90425"]}
+            style={styles.headerBackground}
+          >
+            <View style={styles.logoCircle}>
+              <FontAwesome5 name="utensils" size={40} color={APP_COLOR} />
             </View>
-          </View>
+            <Text style={styles.appTitle}>Speedy Delivery</Text>
+            <Text style={styles.appSubtitle}>
+              Tu comida favorita, al instante
+            </Text>
+          </LinearGradient>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Contraseña</Text>
-            <View style={styles.inputWrapper}>
-              <FontAwesome5
-                name="lock"
-                size={16}
-                color="#9CA3AF"
-                style={styles.inputIcon}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                placeholderTextColor="#9CA3AF"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={secureTextEntry}
-              />
-              <TouchableOpacity
-                onPress={() => setSecureTextEntry(!secureTextEntry)}
-              >
+          <View style={styles.formContainer}>
+            <Text style={styles.welcomeText}>¡Hola! 👋</Text>
+            <Text style={styles.welcomeSubText}>
+              Inicia sesión para continuar
+            </Text>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Usuario / Email</Text>
+              <View style={styles.inputWrapper}>
                 <FontAwesome5
-                  name={secureTextEntry ? "eye-slash" : "eye"}
+                  name="user"
                   size={16}
                   color="#9CA3AF"
+                  style={styles.inputIcon}
                 />
+                <TextInput
+                  style={styles.input}
+                  placeholder="ej. JuanPerez"
+                  placeholderTextColor="#9CA3AF"
+                  value={usuario}
+                  onChangeText={setUsuario}
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Contraseña</Text>
+              <View style={styles.inputWrapper}>
+                <FontAwesome5
+                  name="lock"
+                  size={16}
+                  color="#9CA3AF"
+                  style={styles.inputIcon}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="••••••••"
+                  placeholderTextColor="#9CA3AF"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={secureTextEntry}
+                />
+                <TouchableOpacity
+                  onPress={() => setSecureTextEntry(!secureTextEntry)}
+                >
+                  <FontAwesome5
+                    name={secureTextEntry ? "eye-slash" : "eye"}
+                    size={16}
+                    color="#9CA3AF"
+                    style={{ padding: 5 }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={handleLogin}
+              activeOpacity={0.8}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.loginButtonText}>Continuar</Text>
+              )}
+            </TouchableOpacity>
+
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>¿No tienes cuenta? </Text>
+              <TouchableOpacity>
+                <Text style={styles.footerLink}>Regístrate</Text>
               </TouchableOpacity>
             </View>
           </View>
-
-          <TouchableOpacity
-            style={styles.loginButton}
-            onPress={handleLogin}
-            activeOpacity={0.8}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.loginButtonText}>Continuar</Text>
-            )}
-          </TouchableOpacity>
-
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>¿No tienes cuenta? </Text>
-            <TouchableOpacity>
-              <Text style={styles.footerLink}>Regístrate</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </View>
   );
