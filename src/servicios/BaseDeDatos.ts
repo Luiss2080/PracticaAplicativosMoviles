@@ -30,6 +30,30 @@ const getApiUrl = () => {
 const API_URL = getApiUrl();
 console.log(`📡 Conectando a API Backend en: ${API_URL}`);
 
+// Helper to prevent infinite hangs
+const fetchWithTimeout = async (
+  url: string,
+  options: RequestInit = {},
+  timeout = 5000,
+) => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal as any, // Type cast for RN compatibility
+    });
+    clearTimeout(id);
+    return response;
+  } catch (err: any) {
+    clearTimeout(id);
+    if (err.name === "AbortError") {
+      throw new Error("Timeout: El servidor tardó mucho en responder");
+    }
+    throw err;
+  }
+};
+
 // --- INITIALIZATION (No longer creates tables locally) ---
 export const initDB = async () => {
   // Check API health if needed, simplifies to just returning true
@@ -140,15 +164,24 @@ export const crearDireccion = async (
 
 export const loginUsuario = async (usuario: string, pin: string) => {
   try {
-    const response = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ usuario, password: pin }),
-    });
+    console.log(`Intentando login en: ${API_URL}/login`);
+    const response = await fetchWithTimeout(
+      `${API_URL}/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuario, password: pin }),
+      },
+      5000,
+    ); // 5 sec timeout
+
     return await response.json();
   } catch (error) {
     console.error("API Error (Login):", error);
-    return { success: false, message: "Error de conexión" };
+    return {
+      success: false,
+      message: "No se pudo conectar al servidor. Verifica tu IP.",
+    };
   }
 };
 
