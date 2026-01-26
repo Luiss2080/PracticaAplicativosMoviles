@@ -5,6 +5,7 @@ type ContextoCarritoType = {
   items: ItemCarrito[];
   agregarItem: (item: ItemCarrito) => void;
   removerItem: (id: string) => void;
+  actualizarCantidad: (id: string, cantidad: number) => void;
   total: number;
   limpiarCarrito: () => void;
   cantidadItems: number;
@@ -41,6 +42,20 @@ export const CarritoProvider = ({
 
   const limpiarCarrito = () => setItems([]);
 
+  const actualizarCantidad = (id: string, cantidad: number) => {
+    setItems((prev) =>
+      prev
+        .map((item) => {
+          if (item.id === id) {
+            const nuevaCantidad = Math.max(0, cantidad);
+            return { ...item, cantidad: nuevaCantidad };
+          }
+          return item;
+        })
+        .filter((item) => item.cantidad > 0),
+    );
+  };
+
   const total = items.reduce(
     (acc, item) => acc + item.precio * item.cantidad,
     0,
@@ -54,6 +69,7 @@ export const CarritoProvider = ({
         items,
         agregarItem,
         removerItem,
+        actualizarCantidad,
         total,
         limpiarCarrito,
         cantidadItems,

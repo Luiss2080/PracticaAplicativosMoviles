@@ -6,7 +6,8 @@ import { crearPedido } from "../servicios/BaseDeDatos";
 
 export const useCarritoControlador = () => {
   const router = useRouter();
-  const { items, total, removerItem, limpiarCarrito } = useCarrito();
+  const { items, total, removerItem, limpiarCarrito, actualizarCantidad } =
+    useCarrito();
 
   const procederAlPago = () => {
     if (items.length === 0) return;
@@ -73,6 +74,16 @@ export const useCarritoControlador = () => {
     router.back();
   };
 
+  const incrementar = (id: string, cantidadActual: number) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    actualizarCantidad(id, cantidadActual + 1);
+  };
+
+  const decrementar = (id: string, cantidadActual: number) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    actualizarCantidad(id, cantidadActual - 1);
+  };
+
   const subtotal = total;
   const costoEnvio = 2.0;
   const totalPagar = subtotal + costoEnvio;
@@ -83,6 +94,8 @@ export const useCarritoControlador = () => {
     costoEnvio,
     totalPagar,
     eliminarItem,
+    incrementar,
+    decrementar,
     vaciarCarrito,
     procederAlPago,
     seguirComprando,
