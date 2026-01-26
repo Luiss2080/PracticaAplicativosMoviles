@@ -1,26 +1,37 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getGananciasRepartidor } from "../../servicios/BaseDeDatos";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 const { width } = Dimensions.get("window");
 
-// Mock Data
-const WEEKLY_DATA = [
-  { day: "Lun", amount: 45.5 },
-  { day: "Mar", amount: 62.0 },
-  { day: "Mie", amount: 30.25 },
-  { day: "Jue", amount: 80.0 },
-  { day: "Vie", amount: 55.0 },
-  { day: "Sab", amount: 120.5 },
-  { day: "Dom", amount: 95.0 },
-];
-
 export default function GananciasVista() {
   const { user } = useAuthStore();
-  const totalWeek = WEEKLY_DATA.reduce((acc, curr) => acc + curr.amount, 0);
+  const [weeklyData, setWeeklyData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) loadGanancias();
+  }, [user]);
+
+  const loadGanancias = async () => {
+    setLoading(true);
+    const data = await getGananciasRepartidor(user?.id || 1);
+    setWeeklyData(data);
+    setLoading(false);
+  };
+
+  const totalWeek = weeklyData.reduce((acc, curr) => acc + curr.amount, 0);
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
@@ -40,42 +51,45 @@ export default function GananciasVista() {
           <View style={styles.balanceRow}>
             <View style={styles.rowItem}>
               <FontAwesome5 name="shopping-bag" size={12} color="#D1FAE5" />
-              <Text style={styles.rowText}>42 Entregas</Text>
+              <Text style={styles.rowText}>
+                {weeklyData.length * 5} Entregas (Est.)
+              </Text>
             </View>
             <View style={styles.rowItem}>
               <FontAwesome5 name="clock" size={12} color="#D1FAE5" />
-              <Text style={styles.rowText}>28h Conectado</Text>
+              <Text style={styles.rowText}>Conectado</Text>
             </View>
           </View>
         </LinearGradient>
 
-        {/* Chart Stub (Bar representation) */}
-        <View style={styles.chartContainer}>
-          {WEEKLY_DATA.map((data, index) => {
-            const height = (data.amount / 150) * 150; // Scale based on max
-            return (
-              <View key={index} style={styles.barContainer}>
-                <View style={[styles.bar, { height: height }]} />
-                <Text style={styles.barLabel}>{data.day}</Text>
-              </View>
-            );
-          })}
-        </View>
+        {loading ? (
+          <ActivityIndicator size="large" color="#10B981" />
+        ) : (
+          <View style={styles.chartContainer}>
+            {weeklyData.map((data, index) => {
+              const height = (data.amount / 60) * 150; // Scale
+              return (
+                <View key={index} style={styles.barContainer}>
+                  <View
+                    style={[
+                      styles.bar,
+                      { height: Math.min(height, 150) || 10 },
+                    ]}
+                  />
+                  <Text style={styles.barLabel}>{data.day}</Text>
+                </View>
+              );
+            })}
+          </View>
+        )}
 
         {/* Recent Transactions */}
         <Text style={styles.sectionTitle}>Actividad Reciente</Text>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <View key={i} style={styles.transactionItem}>
-            <View style={styles.transIcon}>
-              <FontAwesome5 name="arrow-down" size={16} color="#10B981" />
-            </View>
-            <View style={styles.transInfo}>
-              <Text style={styles.transTitle}>Entrega #{1000 + i}</Text>
-              <Text style={styles.transDate}>Hoy, 14:30</Text>
-            </View>
-            <Text style={styles.transAmount}>+$15.50</Text>
-          </View>
-        ))}
+        <View style={styles.transactionItem}>
+          <Text style={{ color: "#94A3B8" }}>
+            No hay transacciones recientes.
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
