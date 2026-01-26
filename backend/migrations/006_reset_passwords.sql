@@ -6,27 +6,25 @@ DELETE FROM usuarios WHERE nombre IN ('SpeedyCliente', 'SpeedyRepartidor');
 DELETE FROM repartidores WHERE nombre = 'Juan Repartidor'; -- Cleanup associated delivery profile
 
 -- 2. Insert Client User (Plain text password as per server.js logic)
-INSERT INTO usuarios (nombre, email, password, rol, avatar, telefono, direccion) 
+INSERT INTO usuarios (nombre, email, password, rol, avatar, telefono) 
 VALUES (
     'SpeedyCliente', 
     'cliente@speedy.com', 
     'demo123', 
     'cliente',
     'https://randomuser.me/api/portraits/men/32.jpg',
-    '555-0101',
-    'Av. Principal 123'
+    '555-0101'
 );
 
 -- 3. Insert Driver User
-INSERT INTO usuarios (nombre, email, password, rol, avatar, telefono, direccion) 
+INSERT INTO usuarios (nombre, email, password, rol, avatar, telefono) 
 VALUES (
     'SpeedyRepartidor', 
     'repartidor@speedy.com', 
     'demo123', 
     'repartidor',
     'https://randomuser.me/api/portraits/women/44.jpg',
-    '555-0102',
-    'Av. Central 456'
+    '555-0102'
 );
 
 -- 4. Create Driver Profile linked to the new Driver User
