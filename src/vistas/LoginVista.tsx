@@ -1,10 +1,10 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -19,6 +19,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 
 // Modern Red Branding
 const APP_COLOR = "#EA052C";
+const { width, height } = Dimensions.get("window");
 
 export default function LoginVista() {
   const router = useRouter();
@@ -36,7 +37,6 @@ export default function LoginVista() {
     }
 
     setIsLoading(true);
-    // Haptic feedback for better UX
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
@@ -45,10 +45,7 @@ export default function LoginVista() {
     setIsLoading(false);
 
     if (res.success) {
-      // Update Global Store
       login(res.user, res.repartidor);
-
-      // Navigate based on Role
       if (res.user.rol === "repartidor") {
         router.replace("/(driver-tabs)/");
       } else {
@@ -64,218 +61,222 @@ export default function LoginVista() {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
-      >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          showsVerticalScrollIndicator={false}
+      {/* Top Section - Red Background */}
+      <View style={styles.topSection}>
+        <View style={styles.logoContainer}>
+          {/* Using FontAwesome car/utensils as placeholder for Logo */}
+          <FontAwesome5 name="shipping-fast" size={60} color="#fff" />
+        </View>
+        <Text style={styles.brandTitle}>Speedy</Text>
+        <Text style={styles.brandSlogan}>Tu delivery, al instante</Text>
+      </View>
+
+      {/* Bottom Section - White Sheet */}
+      <View style={styles.bottomSheet}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
         >
-          <LinearGradient
-            colors={[APP_COLOR, "#C90425"]}
-            style={styles.headerBackground}
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
           >
-            <View style={styles.logoCircle}>
-              <FontAwesome5 name="utensils" size={40} color={APP_COLOR} />
+            <View style={styles.welcomeContainer}>
+              <Text style={styles.welcomeTitle}>Bienvenido Nuevamente</Text>
+              <Text style={styles.welcomeSubtitle}>
+                Accede a tu cuenta para continuar
+              </Text>
             </View>
-            <Text style={styles.appTitle}>Speedy Delivery</Text>
-            <Text style={styles.appSubtitle}>
-              Tu comida favorita, al instante
-            </Text>
-          </LinearGradient>
 
-          <View style={styles.formContainer}>
-            <Text style={styles.welcomeText}>¡Hola! 👋</Text>
-            <Text style={styles.welcomeSubText}>
-              Inicia sesión para continuar
-            </Text>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Usuario / Email</Text>
-              <View style={styles.inputWrapper}>
+            <View style={styles.form}>
+              {/* Username Input */}
+              <View style={styles.inputContainer}>
                 <FontAwesome5
                   name="user"
-                  size={16}
-                  color="#9CA3AF"
+                  size={18}
+                  color="#64748B"
                   style={styles.inputIcon}
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="ej. JuanPerez"
-                  placeholderTextColor="#9CA3AF"
+                  placeholder="Nombre de usuario o correo"
+                  placeholderTextColor="#94A3B8"
                   value={usuario}
                   onChangeText={setUsuario}
                   autoCapitalize="none"
                 />
               </View>
-            </View>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Contraseña</Text>
-              <View style={styles.inputWrapper}>
+              {/* Password Input */}
+              <View style={styles.inputContainer}>
                 <FontAwesome5
                   name="lock"
-                  size={16}
-                  color="#9CA3AF"
+                  size={18}
+                  color="#64748B"
                   style={styles.inputIcon}
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor="#9CA3AF"
+                  placeholder="Contraseña"
+                  placeholderTextColor="#94A3B8"
+                  secureTextEntry={secureTextEntry}
                   value={password}
                   onChangeText={setPassword}
-                  secureTextEntry={secureTextEntry}
                 />
                 <TouchableOpacity
                   onPress={() => setSecureTextEntry(!secureTextEntry)}
                 >
                   <FontAwesome5
                     name={secureTextEntry ? "eye-slash" : "eye"}
-                    size={16}
-                    color="#9CA3AF"
-                    style={{ padding: 5 }}
+                    size={18}
+                    color="#94A3B8"
                   />
                 </TouchableOpacity>
               </View>
-            </View>
 
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={handleLogin}
-              activeOpacity={0.8}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.loginButtonText}>Continuar</Text>
-              )}
-            </TouchableOpacity>
-
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>¿No tienes cuenta? </Text>
-              <TouchableOpacity>
-                <Text style={styles.footerLink}>Regístrate</Text>
+              {/* Login Button */}
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={handleLogin}
+                activeOpacity={0.8}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.loginButtonText}>INGRESAR</Text>
+                )}
               </TouchableOpacity>
+
+              {/* Footer Info */}
+              <View style={styles.footer}>
+                <FontAwesome5 name="info-circle" size={14} color="#64748B" />
+                <Text style={styles.footerText}>
+                  Usa tus credenciales de Speedy
+                </Text>
+              </View>
+
+              {/* Quick Dev Links (Optional, kept for convenience but styled subtly) */}
+              <View style={{ marginTop: 30, alignItems: "center" }}>
+                <Text style={{ fontSize: 10, color: "#CBD5E1" }}>
+                  DEMO ONLY
+                </Text>
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F3F4F6" },
-  keyboardView: { flex: 1 },
-  headerBackground: {
-    height: "35%",
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+  container: {
+    flex: 1,
+    backgroundColor: APP_COLOR,
+  },
+  topSection: {
+    flex: 1, // Takes top roughly 40%
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
   },
-  logoCircle: {
-    width: 90,
-    height: 90,
-    backgroundColor: "#fff",
-    borderRadius: 45,
-    justifyContent: "center",
-    alignItems: "center",
+  logoContainer: {
     marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
   },
-  appTitle: {
-    fontSize: 28,
+  brandTitle: {
+    fontSize: 40,
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: 5,
+    letterSpacing: 1,
   },
-  appSubtitle: {
+  brandSlogan: {
     fontSize: 16,
-    color: "rgba(255,255,255,0.9)",
+    color: "rgba(255,255,255,0.8)",
+    marginTop: 5,
   },
-  formContainer: {
-    flex: 1,
+  bottomSheet: {
+    flex: 1.5, // Takes bottom 60%
     backgroundColor: "#fff",
-    marginHorizontal: 20,
-    marginTop: -40,
-    borderRadius: 20,
-    padding: 25,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 3,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 30,
+    paddingTop: 40,
+    overflow: "hidden",
+  },
+  scrollContent: {
+    paddingBottom: 30,
+  },
+  welcomeContainer: {
+    alignItems: "center",
     marginBottom: 30,
   },
-  welcomeText: {
+  welcomeTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#1F2937",
-    marginBottom: 5,
-  },
-  welcomeSubText: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginBottom: 30,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#374151",
+    color: "#0F172A",
     marginBottom: 8,
+    textAlign: "center",
   },
-  inputWrapper: {
+  welcomeSubtitle: {
+    fontSize: 15,
+    color: "#64748B",
+    textAlign: "center",
+  },
+  form: {
+    gap: 20,
+  },
+  inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F9FAFB",
-    borderWidth: 1,
-    borderColor: "#E5E7EB",
+    backgroundColor: "#F3F4F6", // Light gray bg
     borderRadius: 12,
     paddingHorizontal: 15,
-    height: 50,
-  },
-  inputIcon: { marginRight: 10 },
-  input: { flex: 1, height: "100%", color: "#1F2937" },
-  loginButton: {
-    backgroundColor: APP_COLOR,
     height: 55,
-    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "transparent",
+  },
+  inputIcon: {
+    marginRight: 12,
+  },
+  input: {
+    flex: 1,
+    height: "100%",
+    fontSize: 16,
+    color: "#1E293B",
+  },
+  loginButton: {
+    backgroundColor: "#000", // Black button per reference style with high contrast
+    height: 55,
+    borderRadius: 30, // Pill shape
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
-    shadowColor: APP_COLOR,
+    marginTop: 10,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 5,
     elevation: 5,
   },
   loginButtonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
+    letterSpacing: 1,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 25,
+    alignItems: "center",
+    marginTop: 20,
+    backgroundColor: "#F8FAFC",
+    padding: 15,
+    borderRadius: 12,
+    gap: 8,
   },
-  footerText: { color: "#6B7280" },
-  footerLink: { color: APP_COLOR, fontWeight: "bold" },
+  footerText: {
+    color: "#64748B",
+    fontSize: 14,
+    fontWeight: "500",
+  },
 });
