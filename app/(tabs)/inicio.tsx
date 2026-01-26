@@ -1,5 +1,5 @@
-import DashboardVista from "../../src/vistas/DashboardVista";
+import ClienteHomeVista from "../../src/vistas/cliente/ClienteHomeVista";
 
 export default function DashboardRoute() {
-  return <DashboardVista />;
+  return <ClienteHomeVista />;
 }
