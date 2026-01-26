@@ -14,6 +14,8 @@ export default function CarritoVista() {
     vaciarCarrito,
     procederAlPago,
     seguirComprando,
+    incrementar,
+    decrementar,
   } = useCarritoControlador();
 
   // ... (keeping return content mostly same until summary)
@@ -68,9 +70,39 @@ export default function CarritoVista() {
             // ... item item ...
             <View key={item.id} style={CarritoEstilos.item}>
               <View style={[CarritoEstilos.itemInfo, { flex: 1 }]}>
-                <Text style={CarritoEstilos.cantidadBadge}>
-                  {item.cantidad}x
-                </Text>
+                {/* Quantity Controls */}
+                <View style={{ alignItems: "center", marginRight: 15 }}>
+                  <TouchableOpacity
+                    onPress={() => incrementar(item.id, item.cantidad)}
+                    style={{ padding: 5 }}
+                  >
+                    <FontAwesome5
+                      name="plus-circle"
+                      size={20}
+                      color="#EA052C"
+                    />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 16,
+                      marginVertical: 5,
+                    }}
+                  >
+                    {item.cantidad}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => decrementar(item.id, item.cantidad)}
+                    style={{ padding: 5 }}
+                  >
+                    <FontAwesome5
+                      name="minus-circle"
+                      size={20}
+                      color={item.cantidad > 1 ? "#EA052C" : "#94A3B8"}
+                    />
+                  </TouchableOpacity>
+                </View>
+
                 <View style={{ flex: 1 }}>
                   <Text style={CarritoEstilos.itemNombre}>{item.nombre}</Text>
 

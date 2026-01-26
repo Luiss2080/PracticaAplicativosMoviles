@@ -130,13 +130,46 @@ export default function ClienteHomeVista() {
           {EXAMPLE_BANNERS.map((uri, idx) => (
             <View key={idx} style={styles.bannerContainer}>
               <Image source={{ uri }} style={styles.bannerImage} />
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 10,
+                  left: 10,
+                  backgroundColor: "#EA052C",
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                  borderRadius: 5,
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontWeight: "bold", fontSize: 12 }}
+                >
+                  PROMO 50%
+                </Text>
+              </View>
             </View>
           ))}
         </ScrollView>
 
         {/* Categories */}
-        <View style={styles.sectionHeader}>
+        <View
+          style={[
+            styles.sectionHeader,
+            {
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            },
+          ]}
+        >
           <Text style={styles.sectionTitle}>Categorías</Text>
+          <TouchableOpacity
+            onPress={() => router.push("/(client-tabs)/explorar" as any)}
+          >
+            <Text style={{ color: "#EA052C", fontWeight: "bold" }}>
+              Ver todo
+            </Text>
+          </TouchableOpacity>
         </View>
         <ScrollView
           horizontal
