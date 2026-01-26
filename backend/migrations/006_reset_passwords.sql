@@ -1,7 +1,8 @@
 -- Migration: Reset Credentials for Demo Purposes
 -- Created to ensure valid login for Client and Driver roles
 
--- 1. Ensure clean slate for demo users (avoid duplicates)
+-- 1. Ensure clean slate for demo users (delete by email to avoid unique conflicts)
+DELETE FROM usuarios WHERE email IN ('cliente@speedy.com', 'repartidor@speedy.com', 'juan@speedy.com');
 DELETE FROM usuarios WHERE nombre IN ('SpeedyCliente', 'SpeedyRepartidor');
 DELETE FROM repartidores WHERE nombre = 'Juan Repartidor'; -- Cleanup associated delivery profile
 
