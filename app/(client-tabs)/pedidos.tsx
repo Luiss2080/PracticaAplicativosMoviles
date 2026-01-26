@@ -1,5 +1,5 @@
-import PedidosVista from "../../src/vistas/PedidosVista";
+import HistorialPedidosVista from "../../src/vistas/cliente/HistorialPedidosVista";
 
 export default function PedidosRoute() {
-  return <PedidosVista />;
+  return <HistorialPedidosVista />;
 }
