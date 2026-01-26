@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 const getApiUrl = () => {
   // --- CONFIGURACIÓN MANUAL (Si la autodeteción falla) ---
   // Si tu celular no conecta, cambia "null" por tu IP local (ej: "192.168.1.15")
-  const MANUAL_IP = "172.25.1.150";
+  const MANUAL_IP = "172.25.1.26";
 
   if (MANUAL_IP) return `http://${MANUAL_IP}:3000/api`;
 
