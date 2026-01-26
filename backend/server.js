@@ -76,38 +76,46 @@ app.get("/api/productos", async (req, res) => {
 app.get("/api/productos/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // 1. Get Product
-    const [rows] = await pool.query("SELECT * FROM productos WHERE id = ?", [id]);
-    if (rows.length === 0) return res.status(404).json({ error: "Producto no encontrado" });
+    const [rows] = await pool.query("SELECT * FROM productos WHERE id = ?", [
+      id,
+    ]);
+    if (rows.length === 0)
+      return res.status(404).json({ error: "Producto no encontrado" });
     const producto = rows[0];
 
     // 2. Get Options/Extras Groups
-    const [grupos] = await pool.query("SELECT * FROM grupos_opciones WHERE producto_id = ?", [id]);
-    
+    const [grupos] = await pool.query(
+      "SELECT * FROM grupos_opciones WHERE producto_id = ?",
+      [id],
+    );
+
     // 3. Get Options Values for each group
     // Note: In production doing N+1 queries is bad, but fine for detail view of 1 product.
     const extrasDisponibles = [];
-    
+
     for (const grupo of grupos) {
-       const [opciones] = await pool.query("SELECT * FROM opciones_producto WHERE grupo_id = ?", [grupo.id]);
-       
-       // Add to flat list for compatibility with current Frontend (ProductVista) which expects flat extras
-       // OR redesign frontend to handle groups. 
-       // For NOW: Flatten them so they appear as "Extras".
-       for (const op of opciones) {
-          extrasDisponibles.push({
-             id: op.id.toString(), // Frontend expects string id
-             nombre: `${grupo.nombre}: ${op.nombre}`, // Contextualize name "Salsa: BBQ"
-             precio: parseFloat(op.precio_extra),
-             grupo_id: grupo.id,
-             tipo: grupo.tipo_seleccion
-          });
-       }
+      const [opciones] = await pool.query(
+        "SELECT * FROM opciones_producto WHERE grupo_id = ?",
+        [grupo.id],
+      );
+
+      // Add to flat list for compatibility with current Frontend (ProductVista) which expects flat extras
+      // OR redesign frontend to handle groups.
+      // For NOW: Flatten them so they appear as "Extras".
+      for (const op of opciones) {
+        extrasDisponibles.push({
+          id: op.id.toString(), // Frontend expects string id
+          nombre: `${grupo.nombre}: ${op.nombre}`, // Contextualize name "Salsa: BBQ"
+          precio: parseFloat(op.precio_extra),
+          grupo_id: grupo.id,
+          tipo: grupo.tipo_seleccion,
+        });
+      }
     }
 
     res.json({ ...producto, extrasDisponibles });
-
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -150,7 +158,7 @@ app.post("/api/login", async (req, res) => {
     // Assuming 'usuario' from frontend maps to 'nombre' or 'email' in DB. Let's use 'nombre' for simplicity as per current frontend usage.
     const { usuario } = req.body;
 
-    // Search by name (since frontend sends 'usuario')
+    // Search by name (since frontend sends 'usuario') or email if you prefer standardizing later
     const [rows] = await pool.query(
       "SELECT * FROM usuarios WHERE nombre = ? AND password = ?",
       [usuario, password],
@@ -158,7 +166,30 @@ app.post("/api/login", async (req, res) => {
 
     if (rows.length > 0) {
       const user = rows[0];
-      res.json({ success: true, user: { id: user.id, nombre: user.nombre } });
+      let repartidorInfo = null;
+
+      // If user is a repartidor, fetch their specific details
+      if (user.rol === "repartidor") {
+        const [repRows] = await pool.query(
+          "SELECT * FROM repartidores WHERE usuario_id = ?",
+          [user.id],
+        );
+        if (repRows.length > 0) {
+          repartidorInfo = repRows[0];
+        }
+      }
+
+      res.json({
+        success: true,
+        user: {
+          id: user.id,
+          nombre: user.nombre,
+          email: user.email,
+          rol: user.rol,
+          avatar: user.avatar,
+        },
+        repartidor: repartidorInfo,
+      });
     } else {
       res
         .status(401)
