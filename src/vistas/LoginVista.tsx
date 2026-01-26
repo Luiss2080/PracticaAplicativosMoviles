@@ -1,10 +1,11 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Fontisto } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
+  Animated,
+  Easing,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -19,7 +20,6 @@ import { useAuthStore } from "../stores/useAuthStore";
 
 // Modern Red Branding
 const APP_COLOR = "#EA052C";
-const { width, height } = Dimensions.get("window");
 
 export default function LoginVista() {
   const router = useRouter();
@@ -29,6 +29,26 @@ export default function LoginVista() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+  // Animation Values
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(50)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        easing: Easing.out(Easing.exp),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handleLogin = async () => {
     if (usuario.length === 0 || password.length === 0) {
@@ -61,14 +81,20 @@ export default function LoginVista() {
 
   return (
     <View style={styles.container}>
-      {/* Top Section - Red Background */}
+      {/* Top Section - Animated Brand */}
       <View style={styles.topSection}>
-        <View style={styles.logoContainer}>
-          {/* Using FontAwesome car/utensils as placeholder for Logo */}
-          <FontAwesome5 name="shipping-fast" size={60} color="#fff" />
-        </View>
-        <Text style={styles.brandTitle}>Speedy</Text>
-        <Text style={styles.brandSlogan}>Tu delivery, al instante</Text>
+        <Animated.View
+          style={[
+            styles.logoContainer,
+            { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+          ]}
+        >
+          <View style={styles.iconCircle}>
+            <FontAwesome5 name="shipping-fast" size={50} color={APP_COLOR} />
+          </View>
+          <Text style={styles.brandTitle}>Speedy</Text>
+          <Text style={styles.brandSlogan}>Tu delivery, al instante</Text>
+        </Animated.View>
       </View>
 
       {/* Bottom Section - White Sheet */}
@@ -148,19 +174,38 @@ export default function LoginVista() {
                 )}
               </TouchableOpacity>
 
-              {/* Footer Info */}
-              <View style={styles.footer}>
-                <FontAwesome5 name="info-circle" size={14} color="#64748B" />
-                <Text style={styles.footerText}>
-                  Usa tus credenciales de Speedy
+              <TouchableOpacity style={{ alignSelf: "center", marginTop: 10 }}>
+                <Text style={{ color: "#64748B", fontWeight: "bold" }}>
+                  ¿Olvidaste tu contraseña?
                 </Text>
+              </TouchableOpacity>
+
+              {/* Divider */}
+              <View style={styles.dividerContainer}>
+                <View style={styles.line} />
+                <Text style={styles.dividerText}>O continúa con</Text>
+                <View style={styles.line} />
               </View>
 
-              {/* Quick Dev Links (Optional, kept for convenience but styled subtly) */}
-              <View style={{ marginTop: 30, alignItems: "center" }}>
-                <Text style={{ fontSize: 10, color: "#CBD5E1" }}>
-                  DEMO ONLY
-                </Text>
+              {/* Social Login */}
+              <View style={styles.socialContainer}>
+                <TouchableOpacity style={styles.socialBtn}>
+                  <Fontisto name="google" size={22} color="#DB4437" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.socialBtn}>
+                  <FontAwesome5 name="facebook" size={24} color="#4267B2" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.socialBtn}>
+                  <FontAwesome5 name="apple" size={24} color="#000" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Footer Info */}
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>¿No tienes cuenta?</Text>
+                <TouchableOpacity>
+                  <Text style={styles.signupText}>Regístrate</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
@@ -176,30 +221,48 @@ const styles = StyleSheet.create({
     backgroundColor: APP_COLOR,
   },
   topSection: {
-    flex: 1, // Takes top roughly 40%
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: 30,
+    paddingBottom: 20,
   },
   logoContainer: {
+    alignItems: "center",
+  },
+  iconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
   },
   brandTitle: {
-    fontSize: 40,
+    fontSize: 42,
     fontWeight: "bold",
     color: "#fff",
     letterSpacing: 1,
+    textShadowColor: "rgba(0,0,0,0.1)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   brandSlogan: {
     fontSize: 16,
-    color: "rgba(255,255,255,0.8)",
+    color: "rgba(255,255,255,0.9)",
     marginTop: 5,
+    letterSpacing: 0.5,
   },
   bottomSheet: {
-    flex: 1.5, // Takes bottom 60%
+    flex: 1.8,
     backgroundColor: "#fff",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
     paddingHorizontal: 30,
     paddingTop: 40,
     overflow: "hidden",
@@ -208,75 +271,104 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   welcomeContainer: {
-    alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 25,
   },
   welcomeTitle: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: "bold",
     color: "#0F172A",
     marginBottom: 8,
-    textAlign: "center",
   },
   welcomeSubtitle: {
     fontSize: 15,
     color: "#64748B",
-    textAlign: "center",
   },
   form: {
-    gap: 20,
+    gap: 15,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F3F4F6", // Light gray bg
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    height: 55,
+    backgroundColor: "#F3F4F6",
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    height: 60,
     borderWidth: 1,
-    borderColor: "transparent",
+    borderColor: "#E2E8F0",
   },
   inputIcon: {
-    marginRight: 12,
+    marginRight: 15,
   },
   input: {
     flex: 1,
     height: "100%",
     fontSize: 16,
     color: "#1E293B",
+    fontWeight: "500",
   },
   loginButton: {
-    backgroundColor: "#000", // Black button per reference style with high contrast
-    height: 55,
-    borderRadius: 30, // Pill shape
+    backgroundColor: "#1E293B", // Dark charcoal/black for modernization
+    height: 60,
+    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 10,
-    shadowColor: "#000",
+    shadowColor: "#1E293B",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowRadius: 10,
+    elevation: 6,
   },
   loginButtonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+  },
+  dividerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#E2E8F0",
+  },
+  dividerText: {
+    marginHorizontal: 15,
+    color: "#94A3B8",
+    fontSize: 12,
+  },
+  socialContainer: {
+    flexDirection: "row",
+    justifyContent: "center", // Center aligned per common patterns
+    gap: 20,
+    marginBottom: 20,
+  },
+  socialBtn: {
+    width: 55,
+    height: 55,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   footer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
-    backgroundColor: "#F8FAFC",
-    padding: 15,
-    borderRadius: 12,
-    gap: 8,
+    gap: 5,
   },
   footerText: {
     color: "#64748B",
     fontSize: 14,
-    fontWeight: "500",
+  },
+  signupText: {
+    color: APP_COLOR,
+    fontWeight: "bold",
+    fontSize: 14,
   },
 });
