@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import { initDB, seedDB } from "../src/servicios/BaseDeDatos";
 
 export const unstable_settings = {
-  anchor: "(tabs)",
+  anchor: "(client-tabs)",
 };
 
 export default function RootLayout() {
