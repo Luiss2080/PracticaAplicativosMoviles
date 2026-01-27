@@ -21,22 +21,18 @@
       }
     },
     {
-      "label": "Expo: Start Server (QR)",
+      "label": "🚀 Start Speedy App (Full Stack)",
       "type": "shell",
-      "command": "npx expo start",
+      "command": "node start_app.js",
       "isBackground": true,
       "problemMatcher": [],
-      "presentation": {
-        "group": "expo"
-      }
-    },
-    {
-      "label": "🚀 Dev: Start (Phone/QR)",
-      "dependsOn": ["Expo: Start Server (QR)"],
-      "dependsOrder": "parallel",
       "group": {
         "kind": "build",
         "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
       }
     }
   ]
