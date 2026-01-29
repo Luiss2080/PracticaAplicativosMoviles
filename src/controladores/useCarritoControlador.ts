@@ -1,6 +1,8 @@
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
+import { useContext, useEffect } from "react";
 import { Alert } from "react-native";
+import { ContextoCarrito } from "../context/ContextoCarrito";
 import { crearPedido } from "../servicios/BaseDeDatos";
 
 export const useCarritoControlador = () => {
@@ -73,7 +75,7 @@ export const useCarritoControlador = () => {
               usuario_id: 1, // Hardcoded for now
               total: totalPagar,
               restaurante: items[0]?.restaurante || "Varios",
-              items: items.map((i) => ({
+              items: items.map((i: any) => ({
                 producto_id: (i as any).producto_id || 1,
                 cantidad: i.cantidad,
                 precio: i.precio,

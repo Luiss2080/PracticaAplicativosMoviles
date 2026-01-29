@@ -30,7 +30,7 @@ type ContextoCarritoType = {
   removerCupon: () => void;
 };
 
-const ContextoCarrito = createContext<ContextoCarritoType | undefined>(
+export const ContextoCarrito = createContext<ContextoCarritoType | undefined>(
   undefined,
 );
 
@@ -65,7 +65,8 @@ export const CarritoProvider = ({
     // ... (keep fetch logic)
     try {
       // ...
-      const res = await fetch("http://192.168.1.5:3000/api/cotizar", {
+      // Use centralized API_URL
+      const res = await fetch(`${API_URL}/cotizar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -90,7 +91,7 @@ export const CarritoProvider = ({
 
   const aplicarCupon = async (codigo: string) => {
     try {
-      const res = await fetch("http://192.168.1.5:3000/api/cupones/validar", {
+      const res = await fetch(`${API_URL}/cupones/validar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ codigo }),

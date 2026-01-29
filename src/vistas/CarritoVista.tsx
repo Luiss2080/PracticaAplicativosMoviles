@@ -28,7 +28,6 @@ export default function CarritoVista() {
     setNotas,
     direccionEntrega,
     tipoServicio,
-    tipoServicio,
     setTipoServicio,
     router,
     cupon,

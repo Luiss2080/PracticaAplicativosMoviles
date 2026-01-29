@@ -41,7 +41,7 @@ export default function SeguimientoVista() {
 
   const cargarPedido = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/pedidos/${id}`);
+      const res = await fetch(`${API_URL}/pedidos/${id}`);
       const data = await res.json();
 
       if (data.error) {
