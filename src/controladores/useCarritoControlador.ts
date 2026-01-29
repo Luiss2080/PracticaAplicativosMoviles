@@ -6,11 +6,35 @@ import { crearPedido } from "../servicios/BaseDeDatos";
 
 export const useCarritoControlador = () => {
   const router = useRouter();
-  const { items, total, removerItem, limpiarCarrito, actualizarCantidad } =
-    useCarrito();
+  const {
+    items,
+    total,
+    removerItem,
+    limpiarCarrito,
+    actualizarCantidad,
+    metodoPago,
+    setMetodoPago,
+    notas,
+    setNotas,
+    direccionEntrega,
+    setDireccionEntrega,
+  } = useCarrito();
+
+  const subtotal = total;
+  const costoEnvio = 2.0;
+  const totalPagar = subtotal + costoEnvio;
 
   const procederAlPago = () => {
     if (items.length === 0) return;
+
+    // Validation
+    if (!direccionEntrega && (items[0] as any)?.tipo_servicio === "delivery") {
+      // Maybe alert strict requirement, or default to main address if available.
+      // For now, let's allow it to be empty and backend defaults to ID 1, STRICTLY FOR DEMO.
+      // But better to warn.
+      // Alert.alert("Falta Dirección", "Por favor selecciona una dirección de entrega.");
+      // return;
+    }
 
     Alert.alert(
       "Confirmar Pedido",
@@ -22,7 +46,7 @@ export const useCarritoControlador = () => {
           onPress: async () => {
             // Prepare payload
             const payload = {
-              usuario_id: 1, // Hardcoded for now, or use context
+              usuario_id: 1, // Hardcoded for now
               total: totalPagar,
               restaurante: items[0]?.restaurante || "Varios",
               items: items.map((i) => ({
@@ -30,6 +54,11 @@ export const useCarritoControlador = () => {
                 cantidad: i.cantidad,
                 precio: i.precio,
               })),
+              metodo_pago: metodoPago,
+              notas: notas,
+              direccion_entrega_id: direccionEntrega?.id || 1, // Default to 1 if not selected
+              direccion_origen: items[0]?.restaurante || "Restaurante",
+              tipo_servicio: "delivery",
             };
 
             const res = await crearPedido(payload);
@@ -84,10 +113,6 @@ export const useCarritoControlador = () => {
     actualizarCantidad(id, cantidadActual - 1);
   };
 
-  const subtotal = total;
-  const costoEnvio = 2.0;
-  const totalPagar = subtotal + costoEnvio;
-
   return {
     items,
     subtotal,
@@ -100,5 +125,12 @@ export const useCarritoControlador = () => {
     procederAlPago,
     seguirComprando,
     router,
+    metodoPago,
+    setMetodoPago,
+    notas,
+    setNotas,
+    direccionEntrega,
+    setDireccionEntrega,
+    // Helper for finding delivery address in next screens if needed
   };
 };

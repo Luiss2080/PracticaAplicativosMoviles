@@ -9,6 +9,12 @@ type ContextoCarritoType = {
   total: number;
   limpiarCarrito: () => void;
   cantidadItems: number;
+  metodoPago: string;
+  setMetodoPago: (m: string) => void;
+  notas: string;
+  setNotas: (n: string) => void;
+  direccionEntrega: any;
+  setDireccionEntrega: (d: any) => void;
 };
 
 const ContextoCarrito = createContext<ContextoCarritoType | undefined>(
@@ -21,6 +27,10 @@ export const CarritoProvider = ({
   children: React.ReactNode;
 }) => {
   const [items, setItems] = useState<ItemCarrito[]>([]);
+
+  const [metodoPago, setMetodoPago] = useState("Efectivo");
+  const [notas, setNotas] = useState("");
+  const [direccionEntrega, setDireccionEntrega] = useState<any>(null);
 
   const agregarItem = (nuevoItem: ItemCarrito) => {
     setItems((prevItems) => {
@@ -40,7 +50,10 @@ export const CarritoProvider = ({
     setItems((prev) => prev.filter((i) => i.id !== id));
   };
 
-  const limpiarCarrito = () => setItems([]);
+  const limpiarCarrito = () => {
+    setItems([]);
+    setNotas("");
+  };
 
   const actualizarCantidad = (id: string, cantidad: number) => {
     setItems((prev) =>
@@ -73,6 +86,12 @@ export const CarritoProvider = ({
         total,
         limpiarCarrito,
         cantidadItems,
+        metodoPago,
+        setMetodoPago,
+        notas,
+        setNotas,
+        direccionEntrega,
+        setDireccionEntrega,
       }}
     >
       {children}

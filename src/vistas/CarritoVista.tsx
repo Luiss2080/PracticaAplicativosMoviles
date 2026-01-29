@@ -1,5 +1,11 @@
 import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useCarritoControlador } from "../controladores/useCarritoControlador";
 import { CarritoEstilos } from "../estilos/CarritoEstilos";
 
@@ -16,6 +22,11 @@ export default function CarritoVista() {
     seguirComprando,
     incrementar,
     decrementar,
+    metodoPago,
+    setMetodoPago,
+    notas,
+    setNotas,
+    direccionEntrega,
   } = useCarritoControlador();
 
   // ... (keeping return content mostly same until summary)
@@ -151,6 +162,109 @@ export default function CarritoVista() {
 
         {items.length > 0 && (
           <View style={CarritoEstilos.resumen}>
+            {/* Delivery Details Section */}
+            <View style={{ marginBottom: 20 }}>
+              <Text style={CarritoEstilos.tituloSeccion}>
+                Detalles de Entrega
+              </Text>
+
+              {/* Origin */}
+              <View style={CarritoEstilos.filaDetalle}>
+                <FontAwesome5 name="store" size={16} color="#64748b" />
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <Text style={CarritoEstilos.textoEtiqueta}>Origen</Text>
+                  <Text style={CarritoEstilos.textoValor}>
+                    {items[0]?.restaurante || "Restaurante"}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Destination */}
+              <View style={CarritoEstilos.filaDetalle}>
+                <FontAwesome5 name="map-marker-alt" size={16} color="#64748b" />
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                  <Text style={CarritoEstilos.textoEtiqueta}>Destino</Text>
+                  <Text style={CarritoEstilos.textoValor}>
+                    {direccionEntrega
+                      ? direccionEntrega.titulo
+                      : "Casa (Predeterminado)"}
+                  </Text>
+                </View>
+                {/* TODO: Add onPress to change address */}
+                {/* <TouchableOpacity>
+                    <Text style={{color: '#C21833', fontWeight: 'bold'}}>Cambiar</Text>
+                 </TouchableOpacity> */}
+              </View>
+            </View>
+
+            {/* Payment Method Section */}
+            <View style={{ marginBottom: 20 }}>
+              <Text style={CarritoEstilos.tituloSeccion}>Método de Pago</Text>
+              <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() => setMetodoPago("Efectivo")}
+                  style={[
+                    CarritoEstilos.botonMetodoPago,
+                    metodoPago === "Efectivo" &&
+                      CarritoEstilos.botonMetodoPagoActivo,
+                  ]}
+                >
+                  <FontAwesome5
+                    name="money-bill-wave"
+                    size={16}
+                    color={metodoPago === "Efectivo" ? "#C21833" : "#64748b"}
+                  />
+                  <Text
+                    style={[
+                      CarritoEstilos.textoMetodoPago,
+                      metodoPago === "Efectivo" &&
+                        CarritoEstilos.textoMetodoPagoActivo,
+                    ]}
+                  >
+                    Efectivo
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => setMetodoPago("Tarjeta")}
+                  style={[
+                    CarritoEstilos.botonMetodoPago,
+                    metodoPago === "Tarjeta" &&
+                      CarritoEstilos.botonMetodoPagoActivo,
+                  ]}
+                >
+                  <FontAwesome5
+                    name="credit-card"
+                    size={16}
+                    color={metodoPago === "Tarjeta" ? "#C21833" : "#64748b"}
+                  />
+                  <Text
+                    style={[
+                      CarritoEstilos.textoMetodoPago,
+                      metodoPago === "Tarjeta" &&
+                        CarritoEstilos.textoMetodoPagoActivo,
+                    ]}
+                  >
+                    Tarjeta
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Notes Section */}
+            <View style={{ marginBottom: 20 }}>
+              <Text style={CarritoEstilos.tituloSeccion}>Notas del Pedido</Text>
+              <TextInput
+                style={CarritoEstilos.inputNotas}
+                placeholder="Ej: Tocar el timbre, sin servilletas..."
+                placeholderTextColor="#9ca3af"
+                multiline
+                numberOfLines={2}
+                value={notas}
+                onChangeText={setNotas}
+              />
+            </View>
+
             <View style={CarritoEstilos.filaResumen}>
               <View
                 style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
