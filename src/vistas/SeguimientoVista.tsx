@@ -1,4 +1,4 @@
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -12,9 +12,8 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 import { SeguimientoEstilos } from "../estilos/SeguimientoEstilos";
-import { API_URL } from "../servicios/BaseDeDatos"; // Assuming this is where API_URL is, or finding equivalent
+import { API_URL } from "../servicios/BaseDeDatos";
 
-// Simple interpolation function for smooth movement
 const interpolate = (start: number, end: number, factor: number) => {
   return start + (end - start) * factor;
 };
@@ -33,7 +32,8 @@ export default function SeguimientoVista() {
   // Simulation state
   const [progress, setProgress] = useState(0);
   const [eta, setEta] = useState("");
-  const [status, setStatus] = useState("Asignando conductor...");
+  const [status, setStatus] = useState("Cargando...");
+  const [step, setStep] = useState(0); // 0: Confirmado, 1: Cocina, 2: Camino/Listo, 3: Entregado
 
   useEffect(() => {
     cargarPedido();
@@ -53,13 +53,9 @@ export default function SeguimientoVista() {
       setPedido(data);
 
       // Setup locations
-      // 1. Driver Start (Restaurant or Driver Actual)
       const startLat = data.repartidor_lat || data.restaurante_lat || -12.125;
       const startLon = data.repartidor_lon || data.restaurante_lon || -77.025;
-
-      // 2. User End (Mock if no geocoding)
-      // For demo, we place user slightly away from driver
-      const endLat = startLat + 0.01; // Approx 1km
+      const endLat = startLat + 0.01;
       const endLon = startLon + 0.01;
 
       const start = { latitude: startLat, longitude: startLon };
@@ -67,47 +63,78 @@ export default function SeguimientoVista() {
 
       setDriverLoc(start);
       setUserLoc(end);
-
-      setStatus(
-        data.estado === "pendiente"
-          ? "Preparando tu pedido"
-          : "Pedido en camino",
-      );
       setLoading(false);
 
-      // Start Simulation
-      startSimulation(start, end);
+      if (data.tipo_servicio === "retiro") {
+        startPickupSimulation();
+      } else {
+        startDeliverySimulation(start, end);
+      }
     } catch (e) {
       console.error(e);
       Alert.alert("Error", "Error de conexión");
     }
   };
 
-  const startSimulation = (start: any, end: any) => {
+  const startPickupSimulation = () => {
+    // States: Confirmado -> (3s) En Cocina -> (10s) Listo para retirar
+    setStatus("Pedido Confirmado");
+    setEta("15 min para retirar");
+    setStep(0);
+
+    setTimeout(() => {
+      setStatus("Restaurante preparando tu pedido");
+      setStep(1);
+      setProgress(0.3);
+    }, 3000);
+
+    setTimeout(() => {
+      setStatus("¡Listo para retirar!");
+      setEta("¡Ven por él!");
+      setStep(2);
+      setProgress(1);
+    }, 10000);
+  };
+
+  const startDeliverySimulation = (start: any, end: any) => {
     let t = 0;
-    const duration = 30000; // 30 seconds to arrive
-    const interval = 100; // update every 100ms
-    const step = interval / duration;
+    const duration = 30000;
+    const interval = 100;
+    const stepMove = interval / duration;
+
+    // Initial State
+    setStatus("Buscando conductor...");
+    setStep(0);
 
     const timer = setInterval(() => {
-      t += step;
+      t += stepMove;
+
+      // State Machine Logic based on Time 't' (0 to 1)
+      if (t < 0.1) {
+        setStatus("Conductor asignado. Yendo al restaurante.");
+        setStep(1);
+      } else if (t < 0.3) {
+        setStatus("Recogiendo pedido en restaurante.");
+        setStep(1);
+      } else if (t < 0.9) {
+        setStatus("Conductor en camino a tu dirección.");
+        setStep(2);
+      } else {
+        setStatus("¡Tu pedido ha llegado!");
+        setStep(3);
+      }
+
       if (t >= 1) {
         t = 1;
         clearInterval(timer);
-        setStatus("¡Tu pedido ha llegado!");
         setEta("0 min");
       } else {
-        // Update ETA
         const remainingSecs = Math.ceil((1 - t) * (duration / 1000));
         setEta(`${Math.ceil(remainingSecs / 60)} min`);
-        if (t < 0.2) setStatus("Conductor en camino al restaurante");
-        else if (t < 0.4) setStatus("Recogiendo pedido");
-        else setStatus("En camino a tu ubicación");
       }
 
       const newLat = interpolate(start.latitude, end.latitude, t);
       const newLon = interpolate(start.longitude, end.longitude, t);
-
       setDriverLoc({ latitude: newLat, longitude: newLon });
       setProgress(t);
     }, interval);
@@ -116,7 +143,9 @@ export default function SeguimientoVista() {
   const handleCall = () => {
     if (pedido?.repartidor_telefono)
       Linking.openURL(`tel:${pedido.repartidor_telefono}`);
-    else Alert.alert("Info", "Conductor no tiene teléfono registrado");
+    else if (pedido?.restaurante_telefono)
+      Linking.openURL(`tel:${pedido.restaurante_telefono}`); // Fallback for pickup
+    else Alert.alert("Info", "No hay teléfono registrado");
   };
 
   if (loading)
@@ -125,6 +154,8 @@ export default function SeguimientoVista() {
         <Text>Cargando...</Text>
       </View>
     );
+
+  const isPickup = pedido.tipo_servicio === "retiro";
 
   return (
     <View style={SeguimientoEstilos.contenedor}>
@@ -139,25 +170,32 @@ export default function SeguimientoVista() {
           longitudeDelta: 0.015,
         }}
       >
-        <Marker
-          coordinate={userLoc}
-          title="Tú"
-          description={pedido.direccion_entrega_texto}
-        >
-          <View
-            style={{
-              backgroundColor: "#C21833",
-              padding: 6,
-              borderRadius: 20,
-              borderWidth: 2,
-              borderColor: "white",
-            }}
+        {/* User Marker (only for Delivery) */}
+        {!isPickup && (
+          <Marker
+            coordinate={userLoc}
+            title="Tú"
+            description={pedido.direccion_entrega_texto}
           >
-            <FontAwesome5 name="home" size={14} color="white" />
-          </View>
-        </Marker>
+            <View
+              style={{
+                backgroundColor: "#C21833",
+                padding: 6,
+                borderRadius: 20,
+                borderWidth: 2,
+                borderColor: "white",
+              }}
+            >
+              <FontAwesome5 name="home" size={14} color="white" />
+            </View>
+          </Marker>
+        )}
 
-        <Marker coordinate={driverLoc} title="Repartidor">
+        {/* Moving Entity: Driver (Delivery) or Restaurant (Pickup) */}
+        <Marker
+          coordinate={driverLoc}
+          title={isPickup ? "Restaurante" : "Repartidor"}
+        >
           <View
             style={{
               backgroundColor: "#fff",
@@ -167,12 +205,16 @@ export default function SeguimientoVista() {
               borderColor: "#C21833",
             }}
           >
-            <FontAwesome5 name="motorcycle" size={18} color="#C21833" />
+            <FontAwesome5
+              name={isPickup ? "store" : "motorcycle"}
+              size={18}
+              color="#C21833"
+            />
           </View>
         </Marker>
       </MapView>
 
-      {/* Driver & Status Panel */}
+      {/* Panel */}
       <View style={SeguimientoEstilos.panelEstado}>
         <TouchableOpacity
           style={{ alignItems: "center", marginBottom: 10 }}
@@ -187,7 +229,7 @@ export default function SeguimientoVista() {
         <View style={{ marginBottom: 10 }}>
           <Text style={SeguimientoEstilos.estadoTitulo}>{status}</Text>
           <Text style={SeguimientoEstilos.estadoSubtitulo}>
-            Llegada estimada:{" "}
+            {isPickup ? "Tiempo estimado:" : "Llegada estimada:"}{" "}
             <Text style={{ color: "#C21833", fontWeight: "bold" }}>{eta}</Text>
           </Text>
         </View>
@@ -201,6 +243,7 @@ export default function SeguimientoVista() {
           />
         </View>
 
+        {/* Info Card */}
         <View style={SeguimientoEstilos.repartidorInfo}>
           <View
             style={[
@@ -212,14 +255,22 @@ export default function SeguimientoVista() {
               },
             ]}
           >
-            <FontAwesome5 name="user-alt" size={20} color="#64748b" />
+            <FontAwesome5
+              name={isPickup ? "store" : "user-alt"}
+              size={20}
+              color="#64748b"
+            />
           </View>
           <View style={{ flex: 1, marginLeft: 10 }}>
             <Text style={SeguimientoEstilos.repartidorNombre}>
-              {pedido.repartidor_nombre || "Buscando conductor..."}
+              {isPickup
+                ? pedido.restaurante_nombre
+                : pedido.repartidor_nombre || "Buscando conductor..."}
             </Text>
             <Text style={{ fontSize: 12, color: "#64748b" }}>
-              {pedido.repartidor_vehiculo || "Moto"}
+              {isPickup
+                ? pedido.restaurante_direccion
+                : pedido.repartidor_vehiculo || "Moto"}
             </Text>
           </View>
           <View style={{ flexDirection: "row", gap: 10 }}>
@@ -235,6 +286,30 @@ export default function SeguimientoVista() {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* QR Code for Pickup */}
+        {isPickup && step === 2 && (
+          <View style={{ alignItems: "center", marginTop: 10 }}>
+            <View
+              style={{
+                padding: 10,
+                backgroundColor: "white",
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: "#ddd",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="qrcode-scan"
+                size={50}
+                color="black"
+              />
+            </View>
+            <Text style={{ fontSize: 10, color: "#666", marginTop: 5 }}>
+              Muestra este código al retirar
+            </Text>
+          </View>
+        )}
       </View>
 
       {/* Order Detail Modal */}
