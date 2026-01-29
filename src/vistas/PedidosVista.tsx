@@ -10,16 +10,19 @@ import {
 import { PedidosEstilos } from "../estilos/PedidosEstilos";
 import { API_URL } from "../servicios/BaseDeDatos";
 
+import { useAuthStore } from "../stores/useAuthStore";
+
 export default function PedidosVista() {
   const router = useRouter();
+  const { user } = useAuthStore();
   const [pedidos, setPedidos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const cargarPedidos = async () => {
+    if (!user) return;
     try {
       setLoading(true);
-      // In real app, filter by logged in user ID, e.g. ?usuario_id=1
-      const res = await fetch(`${API_URL}/api/pedidos?usuario_id=1`);
+      const res = await fetch(`${API_URL}/api/pedidos?usuario_id=${user.id}`);
       const data = await res.json();
       setPedidos(data);
     } catch (error) {

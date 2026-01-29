@@ -408,6 +408,78 @@ app.get("/api/pedidos/:id", async (req, res) => {
   }
 });
 
+// --- PERFIL DE USUARIO ---
+app.get("/api/usuarios/:id", async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    const [rows] = await connection.query(
+      "SELECT id, nombre, email, telefono, avatar FROM usuarios WHERE id = ?",
+      [req.params.id],
+    );
+    if (rows.length === 0)
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    res.json(rows[0]);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Error al obtener usuario" });
+  } finally {
+    connection.release();
+  }
+});
+
+// --- FAVORITOS ---
+app.get("/api/favoritos/:usuario_id", async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    const [rows] = await connection.query(
+      `
+            SELECT p.id, p.nombre, p.imagen, p.precio, p.descripcion
+            FROM favoritos f
+            JOIN productos p ON f.producto_id = p.id
+            WHERE f.usuario_id = ?
+        `,
+      [req.params.usuario_id],
+    );
+    res.json(rows);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  } finally {
+    connection.release();
+  }
+});
+
+app.post("/api/favoritos", async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    const { usuario_id, producto_id } = req.body;
+    await connection.query(
+      "INSERT IGNORE INTO favoritos (usuario_id, producto_id) VALUES (?, ?)",
+      [usuario_id, producto_id],
+    );
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  } finally {
+    connection.release();
+  }
+});
+
+app.delete("/api/favoritos", async (req, res) => {
+  const connection = await pool.getConnection();
+  try {
+    const { usuario_id, producto_id } = req.body;
+    await connection.query(
+      "DELETE FROM favoritos WHERE usuario_id = ? AND producto_id = ?",
+      [usuario_id, producto_id],
+    );
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  } finally {
+    connection.release();
+  }
+});
+
 // Start Server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
