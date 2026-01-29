@@ -33,7 +33,7 @@ export default function EditarPerfilVista() {
       });
       // Update local store
       if (user) {
-        login({ ...user, nombre, email }, null);
+        login({ ...user, nombre, email }, undefined);
       }
       Alert.alert("Éxito", "Perfil actualizado");
       router.back();
