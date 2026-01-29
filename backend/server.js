@@ -250,8 +250,8 @@ app.post("/api/pedidos", async (req, res) => {
         finalRestauranteId,
         finalDireccionId,
         conductorId,
-        total - 2.0, // Assuming 2.00 shipping cost based on frontend
-        2.0,
+        req.body.costo_envio || total - 2.0, // Use calculated shipping if sent (or subtract assumed base)
+        req.body.costo_envio || 2.0, // Shipping Cost
         total,
         "pendiente",
         req.body.metodo_pago || "Efectivo",
